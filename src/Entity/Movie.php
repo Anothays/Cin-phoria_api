@@ -2,13 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MovieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['movie:read']],
+    denormalizationContext: ['groups' => ['movie:write']]
+)]
+#[ApiFilter(SearchFilter::class, properties: [
+    'title' => 'partial',
+    'movieCategories.categoryName' => 'exact',
+])]
 class Movie
 {
     #[ORM\Id]
@@ -17,6 +29,7 @@ class Movie
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['movie:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 50)]
@@ -44,16 +57,36 @@ class Movie
     private ?bool $isStaffFavorite = null;
 
     #[ORM\Column(nullable: true)]
+    // #[Groups(['movie:read'])]
     private ?int $notesTotalPoints = null;
 
     #[ORM\Column(nullable: true)]
+    // #[Groups(['movie:read'])]
     private ?int $noteTotalVotes = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
+
+    /**
+     * @var Collection<int, MovieCategory>
+     */
+    #[ORM\ManyToMany(targetEntity: MovieCategory::class, mappedBy: 'movies')]
+    #[Groups(['movie:read'])]
+    private Collection $movieCategories;
+
+    public function __construct() {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+        $this->movieCategories = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->title ?? '';
+    }
 
     public function getId(): ?int
     {
@@ -192,6 +225,12 @@ class Movie
         return $this;
     }
 
+    #[Groups(['movie:read'])]
+    public function getAverageNote(): ?float
+    {
+        return $this->noteTotalVotes ? $this->notesTotalPoints / $this->noteTotalVotes : null;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -204,14 +243,41 @@ class Movie
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MovieCategory>
+     */
+    public function getMovieCategories(): Collection
+    {
+        return $this->movieCategories;
+    }
+
+    public function addMovieCategory(MovieCategory $movieCategory): static
+    {
+        if (!$this->movieCategories->contains($movieCategory)) {
+            $this->movieCategories->add($movieCategory);
+            $movieCategory->addMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovieCategory(MovieCategory $movieCategory): static
+    {
+        if ($this->movieCategories->removeElement($movieCategory)) {
+            $movieCategory->removeMovie($this);
+        }
 
         return $this;
     }
