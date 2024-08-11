@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MovieTheaterRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,17 @@ class MovieTheater
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    /**
+     * @var Collection<int, ProjectionRoom>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectionRoom::class, mappedBy: 'movieTheater', orphanRemoval: true, cascade: ['persist, remove'])]
+    private Collection $projectionRooms;
+
+    public function __construct()
+    {
+        $this->projectionRooms = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +88,36 @@ class MovieTheater
     public function setUpdatedAt(\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectionRoom>
+     */
+    public function getProjectionRooms(): Collection
+    {
+        return $this->projectionRooms;
+    }
+
+    public function addProjectionRoom(ProjectionRoom $projectionRoom): static
+    {
+        if (!$this->projectionRooms->contains($projectionRoom)) {
+            $this->projectionRooms->add($projectionRoom);
+            $projectionRoom->setMovieTheater($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectionRoom(ProjectionRoom $projectionRoom): static
+    {
+        if ($this->projectionRooms->removeElement($projectionRoom)) {
+            // set the owning side to null (unless already changed)
+            if ($projectionRoom->getMovieTheater() === $this) {
+                $projectionRoom->setMovieTheater(null);
+            }
+        }
 
         return $this;
     }
