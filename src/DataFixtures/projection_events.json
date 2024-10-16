@@ -1,0 +1,406 @@
+[
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Saint-James",
+      "salle": 2
+    }
+  },
+
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "SQY",
+      "salle": 2
+    }
+  },
+
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Vélizy2",
+      "salle": 2
+    }
+  },
+
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Parly2",
+      "salle": 2
+    }
+  },
+
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VO",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 1
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "10:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "13:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "17:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 2
+    }
+  },
+  {
+    "format": "STANDARD",
+    "language": "VF",
+    "begin_at": "20:15",
+    "movie": "Inception",
+    "projectionRoom": {
+      "movie_theater": "Disney village",
+      "salle": 2
+    }
+  }
+]
