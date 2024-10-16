@@ -1,4 +1,5 @@
 api_platform:
+  show_webby: false
   title: Hello API Platform
   version: 1.0.0
   formats:
@@ -14,5 +15,8 @@ api_platform:
     extra_properties:
       standard_put: true
       rfc_7807_compliant_errors: true
+  # patch_formats:
+  #   json: ["application/merge-patch+json"]
+  #   jsonapi: ["application/vnd.api+json"]
   keep_legacy_inflector: false
   use_symfony_listeners: true
