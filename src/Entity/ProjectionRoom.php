@@ -8,17 +8,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProjectionRoomRepository::class)]
+#[UniqueConstraint('unique_ProjectionRoom', ['title_room', 'movie_theater_id'])]
 #[ApiResource]
 class ProjectionRoom
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["movie", "reservation"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 2)]
+    #[Groups(["movie", "reservation"])]
     private ?string $titleRoom = null;
 
     #[ORM\Column(nullable: true)]
@@ -30,16 +35,30 @@ class ProjectionRoom
     /**
      * @var Collection<int, ProjectionRoomSeat>
      */
-    #[ORM\OneToMany(targetEntity: ProjectionRoomSeat::class, mappedBy: 'projectionRoom', orphanRemoval: true, cascade: ['persist, remove'])]
+    #[ORM\OneToMany(targetEntity: ProjectionRoomSeat::class, mappedBy: 'projectionRoom', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $projectionRoomSeats;
 
     #[ORM\ManyToOne(inversedBy: 'projectionRooms')]
     #[ORM\JoinColumn(nullable: false)]
     private ?MovieTheater $movieTheater = null;
 
+    /**
+     * @var Collection<int, ProjectionEvent>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectionEvent::class, mappedBy: 'projectionRoom')]
+    private Collection $projectionEvents;
+
     public function __construct()
     {
         $this->projectionRoomSeats = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+        $this->projectionEvents = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->titleRoom;
     }
 
     public function getId(): ?int
@@ -121,6 +140,36 @@ class ProjectionRoom
     public function setMovieTheater(?MovieTheater $movieTheater): static
     {
         $this->movieTheater = $movieTheater;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectionEvent>
+     */
+    public function getProjectionEvents(): Collection
+    {
+        return $this->projectionEvents;
+    }
+
+    public function addProjectionEvent(ProjectionEvent $projectionEvent): static
+    {
+        if (!$this->projectionEvents->contains($projectionEvent)) {
+            $this->projectionEvents->add($projectionEvent);
+            $projectionEvent->setProjectionRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectionEvent(ProjectionEvent $projectionEvent): static
+    {
+        if ($this->projectionEvents->removeElement($projectionEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($projectionEvent->getProjectionRoom() === $this) {
+                $projectionEvent->setProjectionRoom(null);
+            }
+        }
 
         return $this;
     }

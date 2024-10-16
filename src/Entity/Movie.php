@@ -2,69 +2,117 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Controller\CoucouController;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
+#[IsGranted("ROLE_USER")]
 #[ApiResource(
-    normalizationContext: ['groups' => ['movie:read']],
-    denormalizationContext: ['groups' => ['movie:write']]
+    normalizationContext: ['groups' => ['movie']],
+    denormalizationContext: ['groups' => ['movie', 'movie:write']],
+    operations: [
+        // new Post(
+        //     name: 'coucou',
+        //     uriTemplate: '/coucou/{id}',
+        //     controller: CoucouController::class
+        // ),
+        // new GetCollection(
+        //     name: 'lol',
+        //     uriTemplate: '/lol',
+        //     controller: CoucouController::class,
+        //     // openapi:
+        // ) 
+    ]
 )]
+#[Get()]
+#[GetCollection()]
+#[Post(security: "is_granted('ROLE_ADMIN')")]
+#[Put(security: "is_granted('ROLE_ADMIN')")]
+#[Delete(security: "is_granted('ROLE_ADMIN')")]
+#[Vich\Uploadable]
+// #[QueryParameter(key: ':property', filter: SearchFilter::class)]
+#[ApiFilter(BooleanFilter::class, properties: ['isStaffFavorite'])]
 #[ApiFilter(SearchFilter::class, properties: [
-    'title' => 'partial',
+    'projectionEvents.beginAt' => 'partial',
+    'projectionEvents.projectionRoom.movieTheater.theaterName' => 'exact',
     'movieCategories.categoryName' => 'exact',
-])]
+    'createdAt' => 'exact',
+    'title' => 'exact',
+    ]
+)]
+// #[ApiFilter(DateFilter::class, properties: [
+//     'projectionEvents.beginAt' => 'exact', // Ajoutez ce filtre pour la date
+// ])]
 class Movie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["movie", 'reservation'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['movie:read'])]
+    #[Groups(["movie", 'reservation'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(["movie", 'reservation'])]
     private ?string $director = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(["movie", 'reservation'])]
     private ?string $synopsis = null;
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    #[Groups(["movie", 'reservation'])]
     private ?array $casting = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $duration = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(["movie", 'reservation'])]
     private ?\DateTimeInterface $releasedOn = null;
 
     #[ORM\Column(type: Types::ARRAY)]
+    #[Groups(["movie", 'reservation'])]
     private array $posters = [];
 
     #[ORM\Column]
+    #[Groups(["movie", 'reservation'])]
     private ?int $minimumAge = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["movie", 'reservation'])]
     private ?bool $isStaffFavorite = null;
 
     #[ORM\Column(nullable: true)]
-    // #[Groups(['movie:read'])]
+    #[Groups(["movie", 'reservation'])]
     private ?int $notesTotalPoints = null;
 
     #[ORM\Column(nullable: true)]
-    // #[Groups(['movie:read'])]
+    #[Groups(["movie", 'reservation'])]
     private ?int $noteTotalVotes = null;
 
     #[ORM\Column]
+    #[Groups(["movie", 'reservation'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
@@ -74,13 +122,37 @@ class Movie
      * @var Collection<int, MovieCategory>
      */
     #[ORM\ManyToMany(targetEntity: MovieCategory::class, mappedBy: 'movies')]
-    #[Groups(['movie:read'])]
+    #[Groups(["movie", 'reservation'])]
     private Collection $movieCategories;
+
+    /**
+     * @var Collection<int, ProjectionEvent>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectionEvent::class, mappedBy: 'movie', orphanRemoval: true)]
+    #[Groups(["movie"])]
+    private Collection $projectionEvents;
+
+    #[ORM\Column]
+    #[Groups(["movie", 'reservation'])]
+    private ?int $durationInMinutes = null;
+
+    #[Vich\UploadableField(mapping: 'movies', fileNameProperty: 'coverImageName', size: 'coverImageSize')]
+    private ?File $coverImageFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["movie", 'reservation'])]
+    private ?string $coverImageName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $coverImageSize = null;
+
+    
 
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTime();
         $this->movieCategories = new ArrayCollection();
+        $this->projectionEvents = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -141,18 +213,6 @@ class Movie
         return $this;
     }
 
-    public function getDuration(): ?\DateTimeInterface
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(\DateTimeInterface $duration): static
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
     public function getReleasedOn(): ?\DateTimeInterface
     {
         return $this->releasedOn;
@@ -189,6 +249,7 @@ class Movie
         return $this;
     }
 
+    #[Groups(["movie", 'reservation'])]
     public function isStaffFavorite(): ?bool
     {
         return $this->isStaffFavorite;
@@ -225,7 +286,7 @@ class Movie
         return $this;
     }
 
-    #[Groups(['movie:read'])]
+    #[Groups(['movie', 'reservation'])]
     public function getAverageNote(): ?float
     {
         return $this->noteTotalVotes ? $this->notesTotalPoints / $this->noteTotalVotes : null;
@@ -281,4 +342,108 @@ class Movie
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, ProjectionEvent>
+     */
+    public function getProjectionEvents(): Collection
+    {
+        return $this->projectionEvents;
+    }
+
+    public function addProjectionEvent(ProjectionEvent $projectionEvent): static
+    {
+        if (!$this->projectionEvents->contains($projectionEvent)) {
+            $this->projectionEvents->add($projectionEvent);
+            $projectionEvent->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectionEvent(ProjectionEvent $projectionEvent): static
+    {
+        if ($this->projectionEvents->removeElement($projectionEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($projectionEvent->getMovie() === $this) {
+                $projectionEvent->setMovie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDurationInMinutes(): ?int
+    {
+        return $this->durationInMinutes;
+    }
+
+    public function setDurationInMinutes(int $durationInMinutes): static
+    {
+        $this->durationInMinutes = $durationInMinutes;
+
+        return $this;
+    }
+
+    public function getCoverImageName(): ?string
+    {
+        return $this->coverImageName;
+    }
+
+    public function setCoverImageName(?string $coverImageName): static
+    {
+        $this->coverImageName = $coverImageName;
+
+        return $this;
+    }
+
+    public function setCoverImageFile(?File $coverImageFile = null): void
+    {
+        $this->coverImageFile = $coverImageFile;
+
+        if (null !== $coverImageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTime();
+        }
+    }
+
+    public function getCoverImageFile(): ?File
+    {
+        return $this->coverImageFile;
+    }
+
+    public function setCoverImageSize(?int $coverImageSize): void
+    {
+        $this->coverImageSize = $coverImageSize;
+    }
+
+    public function getCoverImageSize(): ?int
+    {
+        return $this->coverImageSize;
+    }
+
+
+    public function getMovieTheatersWithProjectionEvents(): Collection
+    {
+        $callback = function( ProjectionEvent $item) {
+            return $item->getMovieTheater();
+        };
+        // $movieTheaters = array_map($callback, [...$this->projectionEvents]);
+        $movieTheaters = new ArrayCollection();
+        
+        foreach ($this->projectionEvents as $projectionEvent) {
+            $movieTheater = $projectionEvent->getMovieTheater();
+            if (!$movieTheaters->contains($movieTheater)) {
+                $movieTheaters->add($movieTheater);
+            }
+        }
+
+        return $movieTheaters;
+
+    }
+
+    
+
+
 }

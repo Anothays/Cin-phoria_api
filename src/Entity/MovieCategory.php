@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\MovieCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,35 +11,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: MovieCategoryRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['movieCategory:read']],
-    denormalizationContext: ['groups' => ['movieCategory:write']]
-)]
+#[ApiResource()]
 class MovieCategory
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['movieCategory:read', 'movie:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['movieCategory:read', 'movie:read'])]
+    #[Groups("category:write")]
     private ?string $categoryName = null;
 
-    #[ORM\Column]
-    #[Groups(['movieCategory:read'])]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
-    #[Groups(['movieCategory:read'])]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
     /**
      * @var Collection<int, Movie>
      */
     #[ORM\ManyToMany(targetEntity: Movie::class, inversedBy: 'movieCategories')]
-    #[Groups(['movieCategory:read, movie:read'])]
     private Collection $movies;
 
     public function __construct() {

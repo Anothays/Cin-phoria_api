@@ -4,11 +4,15 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProjectionRoomSeatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[ORM\Entity(repositoryClass: ProjectionRoomSeatRepository::class)]
 #[ApiResource]
+#[UniqueConstraint('unique_seatRow_seatNumber_ProjectionRoom', ['seat_row', 'seat_number', 'projection_room_id'])]
 class ProjectionRoomSeat
 {
     #[ORM\Id]
@@ -34,6 +38,23 @@ class ProjectionRoomSeat
     #[ORM\ManyToOne(inversedBy: 'projectionRoomSeats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ProjectionRoom $projectionRoom = null;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'seats')]
+    private Collection $reservations;
+
+    public function __construct() {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+        $this->reservations = new ArrayCollection();
+    }
+
+    public function getRowAndNumberSeat(): string
+    {
+        return $this->seatRow . $this->seatNumber;
+    }
 
     public function getId(): ?int
     {
@@ -108,6 +129,33 @@ class ProjectionRoomSeat
     public function setProjectionRoom(?ProjectionRoom $projectionRoom): static
     {
         $this->projectionRoom = $projectionRoom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->addSeat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            $reservation->removeSeat($this);
+        }
 
         return $this;
     }

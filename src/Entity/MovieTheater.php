@@ -2,24 +2,35 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MovieTheaterRepository;
+use App\Repository\ProjectionEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: MovieTheaterRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['movieTheater']],
+    denormalizationContext: ['groups' => ['movieTheater:write']],
+)]
 class MovieTheater
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['movie', "movieTheater"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['movie', "movieTheater", "reservation"])]
     private ?string $theaterName = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(["movieTheater"])]
     private ?string $city = null;
 
     #[ORM\Column]
@@ -31,12 +42,19 @@ class MovieTheater
     /**
      * @var Collection<int, ProjectionRoom>
      */
-    #[ORM\OneToMany(targetEntity: ProjectionRoom::class, mappedBy: 'movieTheater', orphanRemoval: true, cascade: ['persist, remove'])]
+    #[ORM\OneToMany(targetEntity: ProjectionRoom::class, mappedBy: 'movieTheater', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $projectionRooms;
 
     public function __construct()
     {
         $this->projectionRooms = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+    }
+
+    public function __toString()
+    {
+        return $this->city;
     }
 
     public function getId(): ?int
@@ -121,4 +139,17 @@ class MovieTheater
 
         return $this;
     }
+
+
+    public function getAllProjectionEvents(): Collection
+    {
+        $projectionEvents = new ArrayCollection();
+        foreach ($this->projectionRooms as $projectionRoom) {
+            foreach ($projectionRoom->getProjectionEvents() as $projectionEvent) {
+                $projectionEvents->add($projectionEvent);
+            }
+        }
+        return $projectionEvents;
+    }
+
 }
