@@ -38,6 +38,7 @@
     "symfony/uid": "7.1.*",
     "symfony/validator": "7.1.*",
     "symfony/yaml": "7.1.*",
+    "symfonycasts/reset-password-bundle": "^1.22",
     "vich/uploader-bundle": "^2.4"
   },
   "require-dev": {
