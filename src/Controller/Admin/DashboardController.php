@@ -49,6 +49,7 @@ class DashboardController extends AbstractDashboardController
         return Dashboard::new()
             ->setTitle('Tableau de bord')
             ->setFaviconPath('/favicon.png')
+            ->generateRelativeUrls();
             ;
     }
 
