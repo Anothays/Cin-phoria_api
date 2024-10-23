@@ -20,9 +20,8 @@ services:
     image: "mysql:8.2"
     container_name: bdd
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    env_file:
+      - .env.dev
     ports:
       #   # To allow the host machine to access the ports below, modify the lines below.
       #   # For example, to allow the host to connect to port 3306 on the container, you would change
