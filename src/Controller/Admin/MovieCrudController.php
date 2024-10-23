@@ -35,7 +35,7 @@ class MovieCrudController extends AbstractCrudController
             AssociationField::new('projectionEvents', 'séances'),
             DateField::new('createdAt', 'Rajouté le'),
             DateField::new('releasedOn', 'Sortie le'),
-            BooleanField::new('isStaffFavorite', 'En favoris'),
+            BooleanField::new('staffFavorite', 'En favoris'),
             TextField::new('coverImageFile', 'Image')->setFormType(VichImageType::class)->onlyOnForms(),
             ImageField::new('coverImageName', 'Image')->setBasePath('/uploads/images')->onlyOnIndex()
 

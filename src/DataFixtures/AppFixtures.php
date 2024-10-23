@@ -71,7 +71,7 @@ class AppFixtures extends Fixture
                 ->setDurationInMinutes($value["durationInMinutes"])
                 ->setMinimumAge($value["minimumAge"])
                 ->setSynopsis($value["synopsis"])
-                ->setStaffFavorite($value["isStaffFavorite"])
+                ->setStaffFavorite($value["staffFavorite"])
                 ->setReleasedOn(new DateTime($value["releasedOn"]))
                 ->setNoteTotalVotes($value["noteTotalVotes"])
                 ->setNotesTotalPoints($value["notesTotalPoints"])

@@ -101,7 +101,7 @@ class Movie
 
     #[ORM\Column(nullable: true)]
     #[Groups(["movie", 'reservation'])]
-    private ?bool $isStaffFavorite = null;
+    private ?bool $staffFavorite = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(["movie", 'reservation'])]
@@ -250,14 +250,14 @@ class Movie
     }
 
     #[Groups(["movie", 'reservation'])]
-    public function isStaffFavorite(): ?bool
+    public function getStaffFavorite(): ?bool
     {
-        return $this->isStaffFavorite;
+        return $this->staffFavorite;
     }
 
-    public function setStaffFavorite(?bool $isStaffFavorite): static
+    public function setStaffFavorite(?bool $staffFavorite): static
     {
-        $this->isStaffFavorite = $isStaffFavorite;
+        $this->staffFavorite = $staffFavorite;
 
         return $this;
     }
