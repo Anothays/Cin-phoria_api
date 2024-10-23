@@ -27,16 +27,16 @@ class EmailContactController extends AbstractController
             ], 400);
         }
 
-        $username = $content['username'];
-        $emailAdress = $content['email'];
-        $message = $content['message'];
-        $object = $content['object'];
+        $username = htmlspecialchars($content['username']);
+        $emailAdress = htmlspecialchars($content['email']);
+        $message = htmlspecialchars($content['message']);
+        $object = htmlspecialchars($content['object']);
 
         $email = (new Email())
-        ->from("cinephoria@contact.com")
+        ->from($this->parameterBag->get('email'))
         ->to($this->parameterBag->get('email'))
-        ->subject($this->parameterBag->get('email'))
-        ->html("<p>$emailAdress :</p><p>$message</p>")
+        ->subject("[CONTACT] : {$object}")
+        ->html("<p>$username</p><p>{$emailAdress}</p><p>$message</p>")
         ;
 
         // return $this->json([
