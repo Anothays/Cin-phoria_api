@@ -3,6 +3,8 @@ FROM php:8.2-apache
 COPY . /var/www/html/
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     zip unzip \
@@ -18,6 +20,6 @@ RUN chmod +x ./shell/init.sh ./shell/resetdb.sh
 
 CMD ["bash", "./shell/init.sh"]
 
-EXPOSE 80
+EXPOSE 90
 
 

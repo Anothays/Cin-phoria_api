@@ -4,9 +4,9 @@ services:
     restart: always
     container_name: api
     env_file:
-      - .env.prod.local
+      - .env.dev
     ports:
-      - 80:80
+      - 90:80
     depends_on:
       - database
 
