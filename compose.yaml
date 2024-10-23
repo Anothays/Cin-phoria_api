@@ -1,6 +1,7 @@
 services:
   api:
-    build: .
+    # build: .
+    image: "anothay/cinephoria_api"
     restart: always
     container_name: api
     env_file:
