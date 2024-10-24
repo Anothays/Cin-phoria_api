@@ -42,6 +42,7 @@ class AppFixtures extends Fixture
                 ->setRoles($value['roles'])
                 ->setFirstname($value['firstname'])
                 ->setLastname($value['lastname'])
+                ->setVerified(true)
                 ;
             $user->setPassword($this->passwordHasher->hashPassword($user, $value['password']));
             $users[] = $user;
