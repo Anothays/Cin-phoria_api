@@ -3,11 +3,19 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\UserRepository;
+use App\State\ReservationProvider;
+use App\State\UserStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -15,39 +23,62 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
-    normalizationContext: ['user'],
-    denormalizationContext: ['user:write']
+    normalizationContext: ['groups' => ['user']],
+    denormalizationContext: ['groups' => ['user:write']],
+    operations: [
+        new GetCollection(
+            security: 'is_granted("ROLE_USER")', 
+        ),
+        new Get(
+            security: 'is_granted("ROLE_USER")',
+        ),
+        new Post(
+            processor: UserStateProcessor::class,
+        ),
+        new Put(
+            security: 'is_granted("ROLE_USER")',
+            
+            // uriTemplate: '/reservations/{id}',
+            // controller: CoucouController::class,
+            // read: false,
+        ),
+        new Patch(
+            security: 'is_granted("ROLE_USER")'
+        )
+    ],
 )]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user'])]
+    #[Groups(['user', 'user:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'user:write'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['user'])]
+    #[Groups(['user:write'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['user','user:write'])]
     private ?string $password = null;
 
     /**
      * @var Collection<int, Reservation>
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
-    #[Groups(['user'])]
+    #[Groups(['user', 'user:write'])]
     private Collection $reservations;
 
     #[ORM\Column]
@@ -57,12 +88,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'user:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['user'])]
+    #[Groups(['user', 'user:write'])]
     private ?string $lastname = null;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     public function __construct()
     {
@@ -79,6 +113,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+    
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -232,6 +273,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): ?string
     {
         return $this->firstname . " " . $this->lastname;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 
 }

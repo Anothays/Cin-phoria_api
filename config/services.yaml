@@ -8,6 +8,7 @@ parameters:
   stripe_secret_key: "%env(STRIPE_SECRET_KEY)%"
   stripe_secret_webhook: "%env(STRIPE_SECRET_WEBHOOK)%"
   email: "%env(EMAIL)%"
+  base_url_front: "%env(BASE_URL_FRONT)%"
 
 services:
   # default configuration for services in *this* file

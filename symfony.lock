@@ -271,6 +271,9 @@
             "config/packages/reset_password.yaml"
         ]
     },
+    "symfonycasts/verify-email-bundle": {
+        "version": "v1.17.1"
+    },
     "vich/uploader-bundle": {
         "version": "2.4",
         "recipe": {
