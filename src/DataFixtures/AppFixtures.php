@@ -63,8 +63,12 @@ class AppFixtures extends Fixture
         $movies_data = json_decode(file_get_contents(__DIR__ . '/movies.json'), true);
         // $imagesCover = array_diff(scandir("src/DataFixtures/medias"), ['.DS_Store', '.', '..']);
         $movies = [];
+        $destinationDir = "public/uploads/images/";
+        if (!is_dir($destinationDir)) {
+            mkdir($destinationDir, 0777, true);
+        }
         foreach ($movies_data as $value) {
-            copy("src/DataFixtures/medias/movies_posters/{$value['imageCover']}", "public/uploads/images/{$value['imageCover']}");
+            copy("src/DataFixtures/medias/movies_posters/{$value['imageCover']}", "{$destinationDir}{$value['imageCover']}");
             $movie = (new Movie())
                 ->setTitle($value["title"])
                 ->setDirector($value["director"])
