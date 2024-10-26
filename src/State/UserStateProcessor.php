@@ -6,6 +6,7 @@ use ApiPlatform\Api\UrlGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
+use App\Dto\UserCreatedAccount;
 use App\Entity\User;
 use App\Security\EmailVerifier;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -41,6 +42,7 @@ class UserStateProcessor implements ProcessorInterface
             $data->setPassword($hashedPasword);
             $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
             $this->sendEmailConfirmation($result);
+
             return $result;
         }
     }

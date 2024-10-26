@@ -18,10 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_STAFF')]
 class DashboardController extends AbstractDashboardController
 {
     #[Route('/admin', name: 'admin')]
-    // #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
         // return parent::index();

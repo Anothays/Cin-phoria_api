@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Patch;
+use App\Dto\UserCreatedAccount;
 use App\Repository\UserRepository;
 use App\State\ReservationProvider;
 use App\State\UserStateProcessor;
