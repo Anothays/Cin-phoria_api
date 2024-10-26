@@ -2,22 +2,21 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
+use App\Entity\UserStaff;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class UserCrudController extends AbstractCrudController
+class UserStaffCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return User::class;
+        return UserStaff::class;
     }
 
 
@@ -28,7 +27,6 @@ class UserCrudController extends AbstractCrudController
             EmailField::new('email'),
             ArrayField::new('roles', 'Rôles'),
             DateTimeField::new('createdAt', 'inscrit le'),
-            AssociationField::new('reservations', 'Réservations')->hideOnForm()
         ];
     }
 
@@ -36,9 +34,9 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-        ->setEntityLabelInSingular('Utilisateur')
-        ->setEntityLabelInPlural('Utilisateurs')
-        ->setPageTitle('index', 'Les utilisateurs')
+        ->setEntityLabelInSingular('Employé')
+        ->setEntityLabelInPlural('Employés')
+        ->setPageTitle('index', 'Les employés')
         ->setPaginatorPageSize('20')
         ->showEntityActionsInlined()
         ;

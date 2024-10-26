@@ -10,6 +10,7 @@ use App\Entity\Reservation;
 use App\Entity\Ticket;
 use App\Entity\TicketCategory;
 use App\Entity\User;
+use App\Entity\UserStaff;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -18,10 +19,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_STAFF')]
 class DashboardController extends AbstractDashboardController
 {
     #[Route('/admin', name: 'admin')]
-    // #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
         // return parent::index();
@@ -48,7 +49,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Tableau de bord')
-            ->setFaviconPath('/favicon.png')
+            ->setFaviconPath('/assets/logos/cinephoria_logo.png')
             ->generateRelativeUrls();
             ;
     }
@@ -64,7 +65,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Réservations', 'fa fa-ticket', Reservation::class),
             MenuItem::linkToCrud('Catégories de projection', 'fa fa-bars', ProjectionFormat::class),
             MenuItem::linkToCrud('Cinémas', 'fa fa-location-dot', MovieTheater::class),
-            MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', User::class),
+            MenuItem::linkToCrud('Clients', 'fa fa-users', User::class),
+            MenuItem::linkToCrud('Employés', 'fa fa-users', UserStaff::class),
             MenuItem::linkToCrud('Tarifs', 'fa fa-money-bill', TicketCategory::class),
             MenuItem::linkToCrud('Billets', 'fa fa-ticket', Ticket::class),
         ];

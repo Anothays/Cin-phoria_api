@@ -9,19 +9,14 @@ use App\Entity\ProjectionEvent;
 use App\Entity\ProjectionFormat;
 use App\Entity\ProjectionRoom;
 use App\Entity\ProjectionRoomSeat;
-use App\Entity\Reservation;
-use App\Entity\Ticket;
 use App\Entity\TicketCategory;
 use App\Entity\User;
+use App\Entity\UserStaff;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Enum\ProjectionEventLanguage;
-use DateInterval;
-use DateTimeImmutable;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
-use function Symfony\Component\Clock\now;
 
 class AppFixtures extends Fixture
 {
@@ -32,6 +27,21 @@ class AppFixtures extends Fixture
     {
         // Support loading fixtures size
         ini_set('memory_limit', '256M'); 
+
+        // Create staff users
+        $users_staff_data = json_decode(file_get_contents(__DIR__ . '/users_staff.json'), true);
+        $usersStaff = [];
+        foreach ($users_staff_data as $value) {
+            $userStaff = (new UserStaff())
+                ->setEmail($value['email'])
+                ->setRoles($value['roles'])
+                ->setFirstname($value['firstname'])
+                ->setLastname($value['lastname'])
+                ;
+            $userStaff->setPassword($this->passwordHasher->hashPassword($userStaff, $value['password']));
+            $usersStaff[] = $userStaff;
+            $manager->persist($userStaff);
+        }
 
         // Create users
         $users_data = json_decode(file_get_contents(__DIR__ . '/users.json'), true);
@@ -49,7 +59,6 @@ class AppFixtures extends Fixture
             $manager->persist($user);
         }
 
-  
         // Create MovieCategories
         $movie_categories_data = json_decode(file_get_contents(__DIR__ . '/movie_categories.json'), true);        
         $movieCategories = [];

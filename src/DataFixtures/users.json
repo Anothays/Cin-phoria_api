@@ -1,12 +1,5 @@
 [
   {
-    "firstname": "admin",
-    "lastname": "admin",
-    "email": "cinephoria@cinephoria.com",
-    "password": "admin",
-    "roles": ["ROLE_ADMIN"]
-  },
-  {
     "firstname": "John",
     "lastname": "Doe",
     "email": "john@doe.com",
