@@ -9,12 +9,18 @@ security:
       entity:
         class: App\Entity\User
         property: email
+    app_user_staff_provider:
+      entity:
+        class: App\Entity\UserStaff
+        property: email
+
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
     login:
+      provider: app_user_provider
       pattern: ^/api/login
       stateless: true
       json_login:
@@ -22,12 +28,13 @@ security:
         success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
+      provider: app_user_provider
       pattern: ^/api
       stateless: true
       jwt: ~
     main:
       lazy: true
-      # provider: all_users
+      provider: app_user_staff_provider
       # custom_authenticator: App\Security\AppAuthenticator
       # login_throttling: true
       # access_denied_handler: App\Security\AccessDeniedHandler
