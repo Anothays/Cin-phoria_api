@@ -14,12 +14,12 @@
     "imageCover": "poster_inception.jpg",
     "posters": [],
     "minimumAge": 10,
-    "staffFavorite": true,
+    "staffFavorite": false,
     "notesTotalPoints": 500,
     "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
-    "movieCategories": ["Science Fiction", "Thriller"]
+    "movieCategories": ["Science-fiction", "Thriller"]
   },
   {
     "title": "The Matrix",
@@ -41,7 +41,7 @@
     "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
-    "movieCategories": ["Science Fiction", "Action"]
+    "movieCategories": ["Science-fiction", "Action"]
   },
   {
     "title": "The Godfather",
@@ -75,7 +75,7 @@
     "imageCover": "poster_pulp_fiction.jpg",
     "posters": [],
     "minimumAge": 16,
-    "staffFavorite": true,
+    "staffFavorite": false,
     "notesTotalPoints": 425,
     "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
@@ -103,5 +103,73 @@
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
     "movieCategories": ["Horreur", "Thriller"]
+  },
+
+  {
+    "title": "L'Amour ouf",
+    "director": "Gilles Lellouche",
+    "synopsis": "Une histoire complexe d'amour et de rédemption, explorant les thèmes de la violence et du sacrifice au sein de relations tumultueuses.",
+    "casting": ["François Civil", "Adèle Exarchopoulos"],
+    "durationInMinutes": 120,
+    "releasedOn": "2024-10-16T00:00:00+00:00",
+    "imageCover": "poster_amour_ouf.jpg",
+    "posters": [],
+    "minimumAge": 16,
+    "staffFavorite": false,
+    "notesTotalPoints": 380,
+    "noteTotalVotes": 95,
+    "createdAt": "2024-10-26T14:30:00+00:00",
+    "updatedAt": "2024-10-26T14:30:00+00:00",
+    "movieCategories": ["Policier", "Drame", "Romance"]
+  },
+  {
+    "title": "Le Comte de Monte-Cristo",
+    "director": "Martin Bourboulon",
+    "synopsis": "Adaptation moderne du classique d'Alexandre Dumas, racontant la vengeance d'Edmond Dantès après des années de trahison et de souffrance.",
+    "casting": ["Pierre Niney", "Vincent Cassel", "Marion Cotillard"],
+    "durationInMinutes": 150,
+    "releasedOn": "2024-10-20T00:00:00+00:00",
+    "imageCover": "https://www.example.com/poster_monte_cristo.jpg",
+    "minimumAge": 12,
+    "staffFavorite": true,
+    "notesTotalPoints": 500,
+    "noteTotalVotes": 100,
+    "createdAt": "2024-10-26T14:30:00+00:00",
+    "updatedAt": "2024-10-26T14:30:00+00:00",
+    "movieCategories": ["Aventure", "Drame"]
+  },
+  {
+    "title": "Nous, les Leroy",
+    "director": "Florent Bernard",
+    "synopsis": "Une comédie autour des relations familiales et des tensions qui surgissent au sein d'une famille nombreuse.",
+    "casting": ["José Garcia", "Charlotte Gainsbourg"],
+    "durationInMinutes": 98,
+    "releasedOn": "2024-04-10T00:00:00+00:00",
+    "imageCover": "poster_nous_les_leroy.jpg",
+    "posters": [],
+    "minimumAge": 10,
+    "staffFavorite": false,
+    "notesTotalPoints": 400,
+    "noteTotalVotes": 100,
+    "createdAt": "2024-10-26T14:30:00+00:00",
+    "updatedAt": "2024-10-26T14:30:00+00:00",
+    "movieCategories": ["Comédie"]
+  },
+  {
+    "title": "La Bête",
+    "director": "Bertrand Bonello",
+    "synopsis": "Dans un futur proche influencé par l'intelligence artificielle, Gabrielle navigue à travers des souvenirs de vies passées pour échapper à une force invisible.",
+    "casting": ["Léa Seydoux", "George MacKay"],
+    "durationInMinutes": 130,
+    "releasedOn": "2024-02-07T00:00:00+00:00",
+    "imageCover": "poster_la_bete.jpg",
+    "posters": [],
+    "minimumAge": 16,
+    "staffFavorite": false,
+    "notesTotalPoints": 300,
+    "noteTotalVotes": 100,
+    "createdAt": "2024-10-26T14:30:00+00:00",
+    "updatedAt": "2024-10-26T14:30:00+00:00",
+    "movieCategories": ["Drame", "Science-fiction", "Romance"]
   }
 ]
