@@ -15,8 +15,6 @@
     "posters": [],
     "minimumAge": 10,
     "staffFavorite": false,
-    "notesTotalPoints": 500,
-    "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
     "movieCategories": ["Science-fiction", "Thriller"]
@@ -37,8 +35,6 @@
     "posters": [],
     "minimumAge": 12,
     "staffFavorite": false,
-    "notesTotalPoints": 400,
-    "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
     "movieCategories": ["Science-fiction", "Action"]
@@ -54,8 +50,6 @@
     "posters": [],
     "minimumAge": 12,
     "staffFavorite": false,
-    "notesTotalPoints": 450,
-    "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
     "movieCategories": ["Drama", "Crime"]
@@ -76,8 +70,6 @@
     "posters": [],
     "minimumAge": 16,
     "staffFavorite": false,
-    "notesTotalPoints": 425,
-    "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
     "movieCategories": ["Crime", "Drame", "Thriller"]
@@ -98,8 +90,6 @@
     "posters": [],
     "minimumAge": 16,
     "staffFavorite": false,
-    "notesTotalPoints": 400,
-    "noteTotalVotes": 100,
     "createdAt": "2024-08-08T14:30:00+00:00",
     "updatedAt": "2024-08-08T14:30:00+00:00",
     "movieCategories": ["Horreur", "Thriller"]
@@ -116,8 +106,6 @@
     "posters": [],
     "minimumAge": 16,
     "staffFavorite": false,
-    "notesTotalPoints": 380,
-    "noteTotalVotes": 95,
     "createdAt": "2024-10-26T14:30:00+00:00",
     "updatedAt": "2024-10-26T14:30:00+00:00",
     "movieCategories": ["Policier", "Drame", "Romance"]
@@ -132,8 +120,6 @@
     "imageCover": "poster_le_comte_de_monte_cristo.webp",
     "minimumAge": 12,
     "staffFavorite": true,
-    "notesTotalPoints": 500,
-    "noteTotalVotes": 100,
     "createdAt": "2024-10-26T14:30:00+00:00",
     "updatedAt": "2024-10-26T14:30:00+00:00",
     "movieCategories": ["Aventure", "Drame"]
@@ -149,8 +135,6 @@
     "posters": [],
     "minimumAge": 10,
     "staffFavorite": false,
-    "notesTotalPoints": 400,
-    "noteTotalVotes": 100,
     "createdAt": "2024-10-26T14:30:00+00:00",
     "updatedAt": "2024-10-26T14:30:00+00:00",
     "movieCategories": ["Comédie"]
@@ -166,8 +150,6 @@
     "posters": [],
     "minimumAge": 16,
     "staffFavorite": false,
-    "notesTotalPoints": 300,
-    "noteTotalVotes": 100,
     "createdAt": "2024-10-26T14:30:00+00:00",
     "updatedAt": "2024-10-26T14:30:00+00:00",
     "movieCategories": ["Drame", "Science-fiction", "Romance"]

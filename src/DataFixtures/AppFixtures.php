@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Movie;
 use App\Entity\MovieCategory;
 use App\Entity\MovieTheater;
@@ -29,7 +30,7 @@ class AppFixtures extends Fixture
         // Support loading fixtures size
         ini_set('memory_limit', '256M'); 
 
-        // Create staff users
+        // CREATE STAFF USERS
         $users_staff_data = json_decode(file_get_contents(__DIR__ . '/users_staff.json'), true);
         $usersStaff = [];
         foreach ($users_staff_data as $value) {
@@ -44,7 +45,7 @@ class AppFixtures extends Fixture
             $manager->persist($userStaff);
         }
 
-        // Create users
+        // CREATE USERS
         $users_data = json_decode(file_get_contents(__DIR__ . '/users.json'), true);
         $users = [];
         foreach ($users_data as $value) {
@@ -59,8 +60,10 @@ class AppFixtures extends Fixture
             $users[] = $user;
             $manager->persist($user);
         }
+        
+        $manager->flush();
 
-        // Create MovieCategories
+        // CREATE MOVIE CATEGORIES
         $movie_categories_data = json_decode(file_get_contents(__DIR__ . '/movie_categories.json'), true);        
         $movieCategories = [];
         foreach ($movie_categories_data as $value) {
@@ -70,7 +73,7 @@ class AppFixtures extends Fixture
             $movieCategories[$value["categoryName"]] = $movie_category;
         }
 
-        // Create Movies
+        // CREATE MOVIES
         $movies_data = json_decode(file_get_contents(__DIR__ . '/movies.json'), true);
         // $imagesCover = array_diff(scandir("src/DataFixtures/medias"), ['.DS_Store', '.', '..']);
         $movies = [];
@@ -88,8 +91,8 @@ class AppFixtures extends Fixture
                 ->setSynopsis($value["synopsis"])
                 ->setStaffFavorite($value["staffFavorite"])
                 ->setReleasedOn(new DateTime($value["releasedOn"]))
-                ->setNoteTotalVotes($value["noteTotalVotes"])
-                ->setNotesTotalPoints($value["notesTotalPoints"])
+                // ->setNoteTotalVotes($value["noteTotalVotes"])
+                // ->setNotesTotalPoints($value["notesTotalPoints"])
                 ->setPosters([])
                 ->setCasting($value["casting"])
                 ->setCoverImageName($value['imageCover'])
@@ -104,7 +107,31 @@ class AppFixtures extends Fixture
             $manager->persist($movie);
         }
 
-        // Create movietheaters with projection rooms and seats
+         // CREATE COMMENTS
+        $comments_data = json_decode(file_get_contents(__DIR__ . '/comments.json'), true);
+        $comments = [];
+        foreach ($comments_data as $value) {
+        // update votes and notes on movies
+        $movie = $movies[$value['movie']];
+        if (isset($value['rate'])) {
+            $movie
+            ->setNoteTotalVotes($movie->getNoteTotalVotes() + 1)
+            ->setNotesTotalPoints($movie->getNotesTotalPoints() + $value["rate"]);
+        }
+        $comment = (new Comment())
+        ->setBody($value['body'])
+        ->setVerified(true)
+        ->setRate($value['rate'] ?? null)
+        ->setMovie($movie)
+        ->setUser($users[$value['user']]);
+        $comments[] = $comment;
+        $manager->persist($comment);
+        $manager->persist($movie);
+        }
+
+        $manager->flush();
+
+        // CREATE MOVIE THEATERS WITH PROJECTION ROOM AND SEATS
         $movie_theaters_data = json_decode(file_get_contents(__DIR__ . '/movie_theaters.json'), true);
         $movieTheaters = [];
         $projectionRooms = [];
@@ -133,17 +160,20 @@ class AppFixtures extends Fixture
                         } else {
                             $projectionRoomSeat->setForReducedMobility(false);
                         }
+                        $manager->persist($projectionRoomSeat);
                     }
                     $row++;
                 }
-                
+                $manager->persist($projectionRoom);
                 $projectionRooms[$movieTheater->getTheaterName()][] = $projectionRoom;
             }
             $movieTheaters['theater_name'] = $movieTheater;
             $manager->persist($movieTheater);
         }
 
-        // Create projection formats
+        $manager->flush();
+
+        // CREATE PROJECTION FORMAT
         $projection_formats_data = json_decode(file_get_contents(__DIR__ . '/projection_formats.json'), true);
         $projectionFormats = [];
         foreach ($projection_formats_data as $value) {
@@ -154,7 +184,8 @@ class AppFixtures extends Fixture
             $projectionFormats[$value['projection_format_name']] = $projectionFormat;
         }
         
-        // Create projection events
+        
+        // CREATE PROJECTION EVENTS
         $projection_events_data = json_decode(file_get_contents(__DIR__ . '/projection_events.json'), true);
         $projectionEvents = [];
         for ($i = 0; $i < 6; $i++) {
@@ -170,11 +201,9 @@ class AppFixtures extends Fixture
             }
         }
 
+        $manager->flush();
 
-        
-
-
-        // Create ticket categories
+        // CREATE TICKET CATEGORIES
         $ticket_categories_data = json_decode(file_get_contents(__DIR__ . '/ticket_categories.json'), true);
         $ticket_categories = [];
         foreach ($ticket_categories_data as $key => $value) {
@@ -187,21 +216,21 @@ class AppFixtures extends Fixture
 
         // ATTENTION ===> CLASSE A FINIR (RELATION ETC)
         // Create reservations and tickets
-        $reservations_data = json_decode(file_get_contents(__DIR__ . '/reservations.json'), true);
-        $reservations = [];
-        foreach ($reservations_data as $key => $value) {
-            $reservation = (new Reservation())
-            ->setPaid($value['is_paid'])
-            ->setUpdatedAt((new \DateTimeImmutable())->add((new \DateInterval("PT{$key}M"))))
-            ->setUser($users[0])
-            ->setProjectionEvent($projectionEvents[0])
-            ->addSeat($projectionEvents[0]->getProjectionRoom()->getProjectionRoomSeats()[$key]);
-            // $ticket = (new Ticket())->setCategory($ticket_categories[array_rand($ticket_categories)]);
-            // $reservation->addTicket($ticket);
-            // $manager->persist($ticket);
-            $manager->persist($reservation);
-            $reservations[] = $reservation;
-        }
+        // $reservations_data = json_decode(file_get_contents(__DIR__ . '/reservations.json'), true);
+        // $reservations = [];
+        // foreach ($reservations_data as $key => $value) {
+        //     $reservation = (new Reservation())
+        //     ->setPaid($value['is_paid'])
+        //     ->setUpdatedAt((new \DateTimeImmutable())->add((new \DateInterval("PT{$key}M"))))
+        //     ->setUser($users[0])
+        //     ->setProjectionEvent($projectionEvents[0])
+        //     ->addSeat($projectionEvents[0]->getProjectionRoom()->getProjectionRoomSeats()[$key]);
+        //     // $ticket = (new Ticket())->setCategory($ticket_categories[array_rand($ticket_categories)]);
+        //     // $reservation->addTicket($ticket);
+        //     // $manager->persist($ticket);
+        //     $manager->persist($reservation);
+        //     $reservations[] = $reservation;
+        // }
 
 
 
@@ -221,6 +250,9 @@ class AppFixtures extends Fixture
         ->setProjectionEvent($projectionEventOver)
         ->setUser($users[0]);
         $manager->persist($reservationOver);
+
+
+
 
         // $tickets_data = json_decode(file_get_contents(__DIR__ . '/tickets.json'), true);
         // $tickets = [];

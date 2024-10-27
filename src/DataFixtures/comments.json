@@ -1,0 +1,272 @@
+[
+  {
+    "body": "Un chef-d'œuvre ! La complexité de l'histoire est fascinante.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Inception"
+  },
+  {
+    "body": "Énormément apprécié, la fin laisse réfléchir !",
+    "rate": 4,
+    "user": 0,
+    "movie": "Inception"
+  },
+  {
+    "body": "Des effets spéciaux impressionnants et une intrigue captivante.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Inception"
+  },
+  {
+    "body": "La bande-son est incroyable, Hans Zimmer au top !",
+    "rate": 5,
+    "user": 0,
+    "movie": "Inception"
+  },
+  {
+    "body": "Un film complexe mais qui vaut vraiment le coup.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Inception"
+  },
+  {
+    "body": "Un film culte ! Un univers visuel génial.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Matrix"
+  },
+  {
+    "body": "Keanu Reeves parfait dans son rôle !",
+    "rate": 4,
+    "user": 0,
+    "movie": "The Matrix"
+  },
+  {
+    "body": "Un classique de la science-fiction, à voir absolument.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Matrix"
+  },
+  {
+    "body": "L'idée des mondes parallèles est fascinante !",
+    "rate": 4,
+    "user": 0,
+    "movie": "The Matrix"
+  },
+  {
+    "body": "Un film qui repousse les limites du genre.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Matrix"
+  },
+  {
+    "body": "Un film puissant, une grande performance d'Al Pacino.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Godfather"
+  },
+  {
+    "body": "Une fresque magistrale sur la famille et le pouvoir.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Godfather"
+  },
+  {
+    "body": "Un classique indémodable, à voir absolument.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Godfather"
+  },
+  {
+    "body": "La réalisation est impeccable, du grand Coppola.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Godfather"
+  },
+  {
+    "body": "Une ambiance incroyable du début à la fin.",
+    "rate": 4,
+    "user": 0,
+    "movie": "The Godfather"
+  },
+  {
+    "body": "Un film intense avec des dialogues inoubliables.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Pulp Fiction"
+  },
+  {
+    "body": "Une narration unique et des personnages marquants.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Pulp Fiction"
+  },
+  {
+    "body": "Du Tarantino pur, j'ai adoré !",
+    "rate": 5,
+    "user": 0,
+    "movie": "Pulp Fiction"
+  },
+  {
+    "body": "Les scènes sont mythiques, un film culte.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Pulp Fiction"
+  },
+  {
+    "body": "Super mise en scène et des personnages captivants.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Pulp Fiction"
+  },
+  {
+    "body": "Un film qui glace le sang, Jack Nicholson est incroyable.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Shining"
+  },
+  {
+    "body": "Une atmosphère oppressante, du pur génie.",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Shining"
+  },
+  {
+    "body": "Stanley Kubrick à son meilleur !",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Shining"
+  },
+  {
+    "body": "Un classique de l'horreur, à voir la nuit !",
+    "rate": 5,
+    "user": 0,
+    "movie": "The Shining"
+  },
+  {
+    "body": "Génialement terrifiant, j'ai adoré.",
+    "rate": 4,
+    "user": 0,
+    "movie": "The Shining"
+  },
+  {
+    "body": "Un film drôle et touchant, une belle surprise.",
+    "rate": 4,
+    "user": 0,
+    "movie": "L'Amour ouf"
+  },
+  {
+    "body": "Gilles Lellouche nous fait rire et réfléchir !",
+    "rate": 5,
+    "user": 0,
+    "movie": "L'Amour ouf"
+  },
+  {
+    "body": "Des moments de tendresse, très sympa.",
+    "rate": 4,
+    "user": 0,
+    "movie": "L'Amour ouf"
+  },
+  {
+    "body": "Un film sincère et bien réalisé.",
+    "rate": 4,
+    "user": 0,
+    "movie": "L'Amour ouf"
+  },
+  {
+    "body": "De l'humour et de l'émotion, très réussi.",
+    "rate": 5,
+    "user": 0,
+    "movie": "L'Amour ouf"
+  },
+  {
+    "body": "Une belle adaptation du classique, captivante.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Le Comte de Monte-Cristo"
+  },
+  {
+    "body": "Pierre Niney est excellent dans ce rôle !",
+    "rate": 5,
+    "user": 0,
+    "movie": "Le Comte de Monte-Cristo"
+  },
+  {
+    "body": "Une épopée intense, bien menée.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Le Comte de Monte-Cristo"
+  },
+  {
+    "body": "Très bien réalisé, on est plongé dans l'histoire.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Le Comte de Monte-Cristo"
+  },
+  {
+    "body": "Un film fidèle au roman, vraiment top.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Le Comte de Monte-Cristo"
+  },
+  {
+    "body": "Un film plein d'humour et de bonne humeur.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Nous, les Leroy"
+  },
+  {
+    "body": "José Garcia est très drôle, un vrai plaisir.",
+    "rate": 5,
+    "user": 0,
+    "movie": "Nous, les Leroy"
+  },
+  {
+    "body": "Un moment agréable, à voir en famille.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Nous, les Leroy"
+  },
+  {
+    "body": "Des personnages attachants et un bon rythme.",
+    "rate": 4,
+    "user": 0,
+    "movie": "Nous, les Leroy"
+  },
+  {
+    "body": "Beaucoup d'humour, super casting !",
+    "rate": 5,
+    "user": 0,
+    "movie": "Nous, les Leroy"
+  },
+  {
+    "body": "Un film intriguant, Lea Seydoux est parfaite.",
+    "rate": 4,
+    "user": 0,
+    "movie": "La Bête"
+  },
+  {
+    "body": "Une atmosphère unique, vraiment captivant.",
+    "rate": 5,
+    "user": 0,
+    "movie": "La Bête"
+  },
+  {
+    "body": "Bertrand Bonello signe un film envoûtant.",
+    "rate": 5,
+    "user": 0,
+    "movie": "La Bête"
+  },
+  {
+    "body": "Un film intense et mystérieux, à voir absolument.",
+    "rate": 4,
+    "user": 0,
+    "movie": "La Bête"
+  },
+  {
+    "body": "Une histoire fascinante et bien construite.",
+    "rate": 4,
+    "user": 0,
+    "movie": "La Bête"
+  }
+]
