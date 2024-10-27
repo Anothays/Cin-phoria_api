@@ -36,8 +36,15 @@ class RateMovieController extends AbstractController
         $userFromjwt = $query->getOneOrNullResult();
 
         $content = json_decode($request->getContent(), true);
-        $reservationId = htmlspecialchars($content['reservationId']);
-        $points = htmlspecialchars($content['points']);
+        if (!$content['reservationId'] || !$content['points'] || !$content['comment']) $this->json(["message" => "Erreur"], 400);
+        
+        $reservationId = filter_var((int) $content['points'], FILTER_VALIDATE_INT);
+        if (!$reservationId) return $this->json(["message" => "Erreur"], 400);
+        
+        $points = filter_var((int) $content['points'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 0, "max_range" => 5]]);
+        if (!$points) return $this->json(["message" => "Les points doivent être entre 0 et 5"], 400);
+        
+
         $comment = htmlspecialchars($content['comment']);
 
         $reservationRepo = $this->em->getRepository(Reservation::class);
