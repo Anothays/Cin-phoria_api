@@ -3,22 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Controller\CoucouController;
-use App\Dto\RateMovieDto;
 use App\Repository\MovieRepository;
-use App\State\MovieStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -27,8 +21,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use ApiPlatform\Metadata\UriVariable;
-use App\Controller\RateMovieController;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[IsGranted("ROLE_USER")]
@@ -169,6 +161,7 @@ class Movie
      * @var Collection<int, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'movie')]
+    #[Groups(["movie"])]
     private Collection $comments;
 
     
