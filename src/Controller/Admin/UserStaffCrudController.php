@@ -23,7 +23,9 @@ class UserStaffCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('fullName', 'Nom'),
+            TextField::new('fullName', 'Nom')->hideOnForm(),
+            TextField::new('lastname', 'Nom')->onlyOnForms(),
+            TextField::new('firstname', 'Prénom')->onlyOnForms(),
             EmailField::new('email'),
             ArrayField::new('roles', 'Rôles'),
             DateTimeField::new('createdAt', 'inscrit le'),

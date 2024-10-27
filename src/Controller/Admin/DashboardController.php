@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Comment;
 use App\Entity\Movie;
 use App\Entity\MovieTheater;
 use App\Entity\ProjectionEvent;
@@ -69,6 +70,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Employés', 'fa fa-users', UserStaff::class),
             MenuItem::linkToCrud('Tarifs', 'fa fa-money-bill', TicketCategory::class),
             MenuItem::linkToCrud('Billets', 'fa fa-ticket', Ticket::class),
+            MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Comment::class),
         ];
     }
 

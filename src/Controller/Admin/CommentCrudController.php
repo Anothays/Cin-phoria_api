@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Comment;
 use App\Entity\Movie;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -18,37 +19,29 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
-class MovieCrudController extends AbstractCrudController
+class CommentCrudController extends AbstractCrudController
 {
-    public static function getEntityFqcn(): string { return Movie::class; }
+    public static function getEntityFqcn(): string { return Comment::class; }
     
     public function configureFields(string $pageName): iterable
     {
         return [
             // IdField::new('id'),
-            TextField::new('title', 'Titre'),
-            TextField::new("director", 'Réalisateur'),
-            ArrayField::new('casting')->hideOnIndex(),
-            NumberField::new('minimumAge', 'Age')->hideOnIndex(),
-            NumberField::new('AverageNote', 'Note sur 10')->hideOnIndex(),
-            TextEditorField::new('synopsis')->hideOnIndex(),
-            AssociationField::new('projectionEvents', 'séances'),
-            DateField::new('createdAt', 'Rajouté le'),
-            DateField::new('releasedOn', 'Sortie le'),
-            BooleanField::new('staffFavorite', 'En favoris'),
-            TextField::new('coverImageFile', 'Image')->setFormType(VichImageType::class)->onlyOnForms(),
-            ImageField::new('coverImageName', 'Image')->setBasePath('/uploads/images')->onlyOnIndex(),
-            AssociationField::new('comments', 'Commentaires')->onlyOnDetail(),
-
+            TextField::new('body', 'Commentaire'),
+            NumberField::new('rate', 'Note'),
+            AssociationField::new('movie', 'Film'),
+            AssociationField::new('user', 'Écrit par'),
+            DateField::new('createdAt', 'Écrit le'),
+            BooleanField::new('verified', 'Approuvé')
         ];
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-        ->setEntityLabelInSingular('Film')
-        ->setEntityLabelInPlural('Films')
-        ->setPageTitle('index', 'Les films')
+        ->setEntityLabelInSingular('commentaire')
+        ->setEntityLabelInPlural('commentaires')
+        ->setPageTitle('index', 'Les commentaires')
         ->setPaginatorPageSize('20')
         ->showEntityActionsInlined()
         ;
@@ -57,7 +50,7 @@ class MovieCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return parent::configureActions($actions)
-        ->update(Crud::PAGE_INDEX, Action::NEW, fn ($action) => $action->setLabel('Ajouter un film'))
+        ->update(Crud::PAGE_INDEX, Action::NEW, fn ($action) => $action->setLabel('Ajouter un commentaire'))
         ;
     }
 }
