@@ -49,35 +49,35 @@ class User extends UserAbstract
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user', 'user:write'])]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?int $id = null;
 
-    #[Groups(['user', 'user:write'])]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
-    #[Groups(['user:write'])]
+    #[Groups(['user:write', 'movie'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[Groups(['user','user:write'])]
+    #[Groups(['user','user:write', 'movie'])]
     private ?string $password = null;
 
     /**
      * @var Collection<int, Reservation>
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
-    #[Groups(['user', 'user:write'])]
+    #[Groups(['user', 'user:write', 'movie'])]
     private Collection $reservations;
 
-    #[Groups(['user', 'user:write'])]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?string $firstname = null;
 
-    #[Groups(['user', 'user:write'])]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?string $lastname = null;
 
     #[ORM\Column]
