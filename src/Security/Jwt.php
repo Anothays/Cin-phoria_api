@@ -3,16 +3,22 @@
 namespace App\Security;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class Jwt {
 
-  public function __construct( private RequestStack $requestStack, private JWTEncoderInterface $jwtManager) {}
+  public function __construct(
+    private RequestStack $requestStack, 
+    private TokenStorageInterface $tokenStorageInterface, 
+    private JWTTokenManagerInterface $jwtManager
+  ) {}
 
-  public function decodeJwt(string $jwt) 
+  public function decodeJwt() 
   {
     try {
-      return $this->jwtManager->decode($jwt);
+      return $this->jwtManager->decode($this->tokenStorageInterface->getToken());
     } catch (\Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException $th) {
       return false;
     }
@@ -21,14 +27,7 @@ class Jwt {
 
   public function getJwtFromHttpHeaders()
   {
-    $request = $this->requestStack->getCurrentRequest();
-    $authHeader = $request->headers->get('Authorization');
-    if (!$authHeader) return null;
-    if (str_starts_with($authHeader, 'Bearer ')) {
-      $token = substr($authHeader, 7); // Extraction du token après 'Bearer '
-      return $token;
-    }
-    return null;
+    return $this->tokenStorageInterface->getToken();
   }
 
 }
