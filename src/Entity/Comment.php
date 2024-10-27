@@ -2,27 +2,46 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
 use App\Repository\CommentRepository;
+use App\State\CommentStateProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['comment']],
+    denormalizationContext: ['groups' =>  ['comment:write']],
+    operations: [
+        new GetCollection(
+            provider: CommentStateProvider::class,
+        ),
+        new Get()
+    ],
+)]
 class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['comment'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['comment'])]
     private ?string $body = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['comment'])]
     private ?int $rate = null;
 
     #[ORM\Column]
+    #[Groups(['comment'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
@@ -30,6 +49,7 @@ class Comment
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comment'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
