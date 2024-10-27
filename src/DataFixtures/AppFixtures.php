@@ -9,6 +9,7 @@ use App\Entity\ProjectionEvent;
 use App\Entity\ProjectionFormat;
 use App\Entity\ProjectionRoom;
 use App\Entity\ProjectionRoomSeat;
+use App\Entity\Reservation;
 use App\Entity\TicketCategory;
 use App\Entity\User;
 use App\Entity\UserStaff;
@@ -169,6 +170,10 @@ class AppFixtures extends Fixture
             }
         }
 
+
+        
+
+
         // Create ticket categories
         $ticket_categories_data = json_decode(file_get_contents(__DIR__ . '/ticket_categories.json'), true);
         $ticket_categories = [];
@@ -182,22 +187,40 @@ class AppFixtures extends Fixture
 
         // ATTENTION ===> CLASSE A FINIR (RELATION ETC)
         // Create reservations and tickets
-        // $reservations_data = json_decode(file_get_contents(__DIR__ . '/reservations.json'), true);
-        // $reservations = [];
-        // foreach ($reservations_data as $key => $value) {
-        //     $reservation = (new Reservation())
-        //     ->setPaid($value['is_paid'])
-        //     ->setUpdatedAt((new DateTimeImmutable())->add((new DateInterval("PT{$key}M"))))
-        //     ->setUser($users[1])
-        //     ->setProjectionEvent($projectionEvents[0])
-        //     ->addSeat($projectionEvents[0]->getProjectionRoom()->getProjectionRoomSeats()[$key]);
-        //     // $ticket = (new Ticket())->setCategory($ticket_categories[array_rand($ticket_categories)]);
-        //     // $reservation->addTicket($ticket);
-        //     // $manager->persist($ticket);
-        //     $manager->persist($reservation);
-        //     $reservations[] = $reservation;
-        // }
+        $reservations_data = json_decode(file_get_contents(__DIR__ . '/reservations.json'), true);
+        $reservations = [];
+        foreach ($reservations_data as $key => $value) {
+            $reservation = (new Reservation())
+            ->setPaid($value['is_paid'])
+            ->setUpdatedAt((new \DateTimeImmutable())->add((new \DateInterval("PT{$key}M"))))
+            ->setUser($users[0])
+            ->setProjectionEvent($projectionEvents[0])
+            ->addSeat($projectionEvents[0]->getProjectionRoom()->getProjectionRoomSeats()[$key]);
+            // $ticket = (new Ticket())->setCategory($ticket_categories[array_rand($ticket_categories)]);
+            // $reservation->addTicket($ticket);
+            // $manager->persist($ticket);
+            $manager->persist($reservation);
+            $reservations[] = $reservation;
+        }
 
+
+
+
+        // Make projectionEvent in the past
+        $projectionEventOver = (new ProjectionEvent())
+        ->setFormat($projectionFormats["STANDARD"])
+        ->setLanguage((ProjectionEventLanguage::VF))
+        ->setMovie($movies["Le Comte de Monte-Cristo"])
+        ->setProjectionRoom($projectionRooms["Disney village"][2])
+        ->setBeginAt((new Datetime())->modify("-7 day"));
+        $manager->persist($projectionEventOver);
+
+        // Make reservation in the past
+        $reservationOver = (new Reservation())
+        ->setPaid(true)
+        ->setProjectionEvent($projectionEventOver)
+        ->setUser($users[0]);
+        $manager->persist($reservationOver);
 
         // $tickets_data = json_decode(file_get_contents(__DIR__ . '/tickets.json'), true);
         // $tickets = [];

@@ -10,11 +10,15 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Controller\CoucouController;
+use App\Dto\RateMovieDto;
 use App\Repository\MovieRepository;
+use App\State\MovieStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -23,7 +27,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
+use ApiPlatform\Metadata\UriVariable;
+use App\Controller\RateMovieController;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[IsGranted("ROLE_USER")]
@@ -48,6 +53,20 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[GetCollection()]
 #[Post(security: "is_granted('ROLE_ADMIN')")]
 #[Put(security: "is_granted('ROLE_ADMIN')")]
+#[Patch(
+    // controller: RateMovieController::class
+    // name: "api_rate_movie",
+    // uriTemplate: "/movies/rate",
+    // processor: MovieStateProcessor::class,
+    // input: RateMovieDto::class,
+    // uriVariables: [
+    //     'reservation_id' => new Link(
+    //         fromClass: Reservation::class,
+    //         fromProperty: 'id',
+    //         identifiers: ['id'],
+    //     )
+    // ],
+)]
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
 #[Vich\Uploadable]
 // #[QueryParameter(key: ':property', filter: SearchFilter::class)]
@@ -146,6 +165,12 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?int $coverImageSize = null;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'movie')]
+    private Collection $comments;
+
     
 
     public function __construct() {
@@ -153,6 +178,7 @@ class Movie
         $this->updatedAt = new \DateTime();
         $this->movieCategories = new ArrayCollection();
         $this->projectionEvents = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -441,6 +467,36 @@ class Movie
 
         return $movieTheaters;
 
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getMovie() === $this) {
+                $comment->setMovie(null);
+            }
+        }
+
+        return $this;
     }
 
     
