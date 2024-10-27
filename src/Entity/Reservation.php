@@ -87,6 +87,9 @@ class Reservation
     #[Groups(['reservation', 'reservation:write'])]
     private Collection $seats;
 
+    #[ORM\Column]
+    private ?bool $hasRate = false;
+
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTime();
@@ -245,5 +248,17 @@ class Reservation
     public function getMovieTheater(): ?string
     {
         return $this->projectionEvent->getProjectionRoom()->getMovieTheater();
+    }
+
+    public function hasRate(): ?bool
+    {
+        return $this->hasRate;
+    }
+
+    public function setHasRate(bool $hasRate): static
+    {
+        $this->hasRate = $hasRate;
+
+        return $this;
     }
 }
