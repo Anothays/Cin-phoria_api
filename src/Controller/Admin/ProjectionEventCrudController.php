@@ -26,10 +26,12 @@ class ProjectionEventCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            IdField::new('id', 'ID')->hideOnForm(),
             AssociationField::new('movie', 'Film'),
             DateField::new('beginAt', 'Date')->setFormat('short'),
             DateField::new('beginAt', 'Heure')->setFormat('HH:mm'),
             DateTimeField::new('beginAt', 'Début de séance')->onlyOnForms(),
+            TextField::new('movieTheater', 'Cinéma')->hideOnForm(),
             AssociationField::new('projectionRoom', 'Salle'),
             ChoiceField::new('language', 'Version'),
             AssociationField::new('format'),
