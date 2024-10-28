@@ -34,19 +34,19 @@ class RateMovieController extends AbstractController
         ->setParameter('email', $decodedJwtToken['username'])
         ->getQuery();
         $userFromjwt = $query->getOneOrNullResult();
-
+        
         $content = json_decode($request->getContent(), true);
         if (!$content['reservationId'] || !$content['points'] || !$content['comment']) $this->json(["message" => "Erreur"], 400);
         
-        $reservationId = filter_var((int) $content['points'], FILTER_VALIDATE_INT);
+        $reservationId = filter_var((int) $content['reservationId'], FILTER_VALIDATE_INT);
         if (!$reservationId) return $this->json(["message" => "Erreur"], 400);
         
         $points = filter_var((int) $content['points'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 0, "max_range" => 5]]);
         if (!$points) return $this->json(["message" => "Les points doivent être entre 0 et 5"], 400);
         
-
+        
         $comment = htmlspecialchars($content['comment']);
-
+        
         $reservationRepo = $this->em->getRepository(Reservation::class);
         /** @var Reservation $reservation */
         $reservation = $reservationRepo->findOneBy(['id' => $reservationId]);
@@ -54,7 +54,7 @@ class RateMovieController extends AbstractController
         $projection =  $reservation->getProjectionEvent();
         /** @var Movie $movie */
         $movie =  $projection->getMovie();
-
+        
         $userFromReservation = $reservation->getUser();
         if ($userFromjwt !== $userFromReservation) return $this->json(["message" => "Ce n'est pas votre réservation"], 401);
 
