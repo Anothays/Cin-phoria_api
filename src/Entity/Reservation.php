@@ -88,6 +88,7 @@ class Reservation
     private Collection $seats;
 
     #[ORM\Column]
+    #[Groups(['reservation', 'reservation:write'])]
     private ?bool $hasRate = false;
 
     public function __construct() {
@@ -250,6 +251,7 @@ class Reservation
         return $this->projectionEvent->getProjectionRoom()->getMovieTheater();
     }
 
+    #[Groups(['reservation', 'reservation:write'])]
     public function hasRate(): ?bool
     {
         return $this->hasRate;

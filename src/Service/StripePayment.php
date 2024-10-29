@@ -44,7 +44,6 @@ class StripePayment
         $reservation =  $this->em->getRepository(Reservation::class)->find($reservationId);
         if (!$reservation) throw new NotFoundHttpException('Reservation not found');
         $reservation->setPaid(true);
-        $this->em->persist($reservation);
         $items = $checkout_session->allLineItems($session_id);
         foreach ($items->data as $item) {
           $ticketCategory = $this->em->getRepository(TicketCategory::class)->findOneBy([
@@ -53,18 +52,18 @@ class StripePayment
           if (!$ticketCategory) throw new NotFoundHttpException('Ticket category not found');
           for($i=1; $i <= $item->quantity; $i++) {
             $ticket = (new Ticket())
-            ->setCategory($ticketCategory)
-            ->setReservation($reservation);
+            ->setCategory($ticketCategory);
+            $reservation->addTicket($ticket);
             $this->em->persist($ticket);
           }
         }
+        $this->em->persist($reservation);
         $this->em->flush();
         // TODO: Record/save fulfillment status for this
         // Checkout Session
         return true;
       }
     } catch (\Throwable $th) {
-      dump($th);
       return false;
     }
   

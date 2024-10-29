@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {# <meta charset="UTF-8">
+    <title>Vos billets pour {{ movie.title }}</title> #}
+
+</head>
+
+
+<body>
+    <h1>Confirmation de vos billets pour {{ resa.projectionEvent.movie.title }}</h1>
+    
+    <p>Bonjour,</p>
+    <p>Nous vous remercions pour votre réservation. Voici les détails de votre séance :</p>
+    
+    <h2>Détails de la séance</h2>
+    <ul>
+        <li><strong>Film :</strong> {{ resa.projectionEvent.movie.title }}</li>
+        <li><strong>Limite d'âge :</strong> {{ resa.projectionEvent.movie.minimumAge }} ans et plus</li>
+        <li><strong>Cinéma :</strong> {{ resa.projectionEvent.movieTheater.theaterName }}</li>
+        <li><strong>Date :</strong> {{ resa.projectionEvent.date|date('d/m/Y') }}</li>
+        <li><strong>Heure de début :</strong> {{ resa.projectionEvent.beginAt|date('H:i') }}</li>
+    </ul>
+    
+    <h2>Vos billets</h2>
+    <p>Voici vos billets pour la séance :</p>
+    
+    <p>Nous vous souhaitons une excellente séance et espérons que vous apprécierez le film !</p>
+    
+    <p>Cordialement,</p>
+    <p>L'équipe de votre cinéma</p>
+</body>
+
+
+
+</html>

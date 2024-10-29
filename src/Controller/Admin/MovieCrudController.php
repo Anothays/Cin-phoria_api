@@ -25,12 +25,12 @@ class MovieCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            // IdField::new('id'),
+            IdField::new('id', 'ID'),
             TextField::new('title', 'Titre'),
             TextField::new("director", 'Réalisateur'),
             ArrayField::new('casting')->hideOnIndex(),
             NumberField::new('minimumAge', 'Age')->hideOnIndex(),
-            NumberField::new('AverageNote', 'Note sur 10')->hideOnIndex(),
+            NumberField::new('AverageNote', 'Note sur 5'),
             TextEditorField::new('synopsis')->hideOnIndex(),
             AssociationField::new('projectionEvents', 'séances'),
             DateField::new('createdAt', 'Rajouté le'),

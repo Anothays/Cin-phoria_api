@@ -42,7 +42,7 @@ class TicketCrudController extends AbstractCrudController
             TextField::new('projectionRoom', 'Salle'),
             TextField::new('projectionFormat', 'Projection format'),
             MoneyField::new('price', 'Prix')->setCurrency('EUR'),
-            AssociationField::new('reservation', 'Réservation liée'),
+            AssociationField::new('reservation', 'Réservation liée')->hideOnForm(),
             // DateTimeField::new('createdAt', 'Émis le'),
         ];
     }

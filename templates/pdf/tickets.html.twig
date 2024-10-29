@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Billets</title>
+</head>
+
+<body>
+  <div class='body'>
+    <div>
+      <img class="logo" src="{{ absolute_url(asset('assets/logos/cinephoria_logo.png')) }}" alt="logo"/>
+      <p class="title">{{ resa.projectionEvent.movie.title }}</p>
+      <p class='projection-date'>{{ resa.projectionEvent.beginAt | date('d/m/Y')}} à {{ resa.projectionEvent.beginAt | date('H:i')}}</p>
+    </div>
+
+    <p class="projection-format">{{ resa.projectionEvent.format }}</p>
+    
+    <p> {{ resa.projectionEvent.movieTheater.theaterName }} - salle {{ resa.projectionEvent.projectionRoom.titleRoom }}</p>
+    
+    <div class="seats">
+      <span>sièges : </span>
+      {% for seat in resa.seats %}
+        <span class="seat"> {{ seat.rowAndNumberSeat }} </span>
+      {% endfor %}
+    </div>
+
+    <p class="price">{{ (resa.totalPrice / 100) | number_format(2, '.', ' ') }} EUR</p>
+
+    {% if resa.tickets|length is same as(0) %}
+      pas de billets
+    {% endif %}
+
+    {% for ticket in resa.tickets %}
+      <div class'qrcode-wrapper'>
+        <img class='qrcode' src="{{ qr_code_data_uri(ticket.uniqueCode) }}" />
+        <p class='uuid'>{{ ticket.uniqueCode }}</p>
+      </div>
+  {% endfor %}
+  </div>
+
+</body>
+
+<style>
+  .body {
+      display: flex;
+      text-align: center;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Helvetica', sans-serif;
+      font-size: 1rem;
+      color: #333;
+      padding: 10px;
+      /* border: 1px #839192 solid; */
+      background: whitesmoke;
+      border-radius: 0.2rem;
+  }
+  .logo {
+    width: 100px;
+    height: auto;
+  }
+  .title {
+    font-size: 1.25rem;
+    text-align: center;
+    font-weight: 900;
+  }
+  .projection-date {
+    font-style: italic;
+    /* font-size: 0.6rem; */
+  }
+  .projection-format {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #839192;
+  }
+  .price {
+    font-weight: 500;
+  }
+  .seats {
+    display: flex;
+    flex-direction: columns;
+    gap: 5px
+  }
+  .seat {
+    color: #839192;
+    font-weight: 700;
+  }
+  .qrcode-wrapper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 0;
+    padding: 0;
+    margin-inline: auto;
+  }
+  .uuid {
+    font-size: 0.5rem;
+    font-weight: 800;
+  }
+</style>
+</html>

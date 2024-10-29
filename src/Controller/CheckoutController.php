@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Reservation;
 use App\Entity\TicketCategory;
 use App\Repository\TicketCategoryRepository;
+use App\Service\EmailSender;
+use App\Service\PdfMaker;
 use App\Service\StripePayment;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -15,16 +17,26 @@ use Symfony\Component\Routing\Attribute\Route;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\StripeClient;
+use Symfony\Component\Mime\Address;
 use Stripe\Webhook;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Serializer;
 
 class CheckoutController extends AbstractController
 {
 
-    public function __construct(private ParameterBagInterface $params, private EntityManagerInterface $em, private ParameterBagInterface $parameterBag) {}
+    public function __construct(
+        private ParameterBagInterface $params, 
+        private EntityManagerInterface $em, 
+        private ParameterBagInterface $parameterBag,
+        private EmailSender $emailSender,
+        private PdfMaker $pdfMaker
+        ) {}
 
     #[Route('/checkout', name: 'app_checkout', methods: ['POST', 'GET'])]
     public function index(Request $request)
@@ -102,9 +114,28 @@ class CheckoutController extends AbstractController
             $body = $request->getContent();
             $event = Webhook::constructEvent($body, $signature, $webhookSecret);
             if ($event->type === 'checkout.session.completed') {
+                
                 $data = $event->data->object;
-                $result = $stripe->fulfill_checkout($data['id']);
-                if (!$result) return new Response('Erreur dans la prodécure de réalisation', 500);
+                // $result = $stripe->fulfill_checkout($data['id']);
+                // if (!$result) return new Response('Erreur dans la prodécure de réalisation', 500);
+                
+                // //ENVOYER BILLETS PAR EMAIL
+                // $reservationId = $data->metadata['reservation'];
+                // /** @var Reservation $reservation */
+                // $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
+                // $to = "jeremy.snnk@gmail.com";
+                // // $to = $reservation->getUser()->getEmail();
+                // $subject = "Votre achat";
+                // $template = "email/email_tickets.html.twig";
+                // $context = [
+                //     'projection' => $reservation->getProjectionEvent(),
+                //     'movie' => $reservation->getProjectionEvent()->getMovie(),
+                //     'tickets' => $reservation->getTickets(),
+                // ];
+                // // $this->emailSender->makeAndSendEmail($to, $subject, $template, $context);
+                $this->pdfMaker->makePdfFile();
+                
+
                 return new Response('Transaction et réalisation effectuée avec succès');
             }
         } catch (\Throwable $th) {

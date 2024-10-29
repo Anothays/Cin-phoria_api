@@ -38,10 +38,12 @@ class ReservationCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            IdField::new('id', "ID")->onlyOnIndex(),
             MoneyField::new('totalPrice', 'Prix total')->setCurrency('EUR'),
             AssociationField::new('projectionEvent', 'Séance')->hideOnForm(),
             DateTimeField::new('createdAt', 'Émise le'),
             BooleanField::new('isPaid', 'Payé')->renderAsSwitch(false),
+            BooleanField::new('hasRate', 'comm'),
             AssociationField::new('user', 'Par')->hideOnForm()
         ];
     }
@@ -49,9 +51,9 @@ class ReservationCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return parent::configureActions($actions)
-        ->add(Crud::PAGE_INDEX, Action::DETAIL)
-        ->disable(Action::NEW)
-        ->disable(Action::EDIT)
+        // ->add(Crud::PAGE_INDEX, Action::DETAIL)
+        // ->disable(Action::NEW)
+        // ->disable(Action::EDIT)
         ;
     }
 
