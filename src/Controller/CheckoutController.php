@@ -116,24 +116,19 @@ class CheckoutController extends AbstractController
             if ($event->type === 'checkout.session.completed') {
                 
                 $data = $event->data->object;
-                // $result = $stripe->fulfill_checkout($data['id']);
-                // if (!$result) return new Response('Erreur dans la prodécure de réalisation', 500);
+                $result = $stripe->fulfill_checkout($data['id']);
+                if (!$result) return new Response('Erreur dans la prodécure de réalisation', 500);
                 
                 // //ENVOYER BILLETS PAR EMAIL
-                // $reservationId = $data->metadata['reservation'];
-                // /** @var Reservation $reservation */
-                // $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
-                // $to = "jeremy.snnk@gmail.com";
-                // // $to = $reservation->getUser()->getEmail();
-                // $subject = "Votre achat";
-                // $template = "email/email_tickets.html.twig";
-                // $context = [
-                //     'projection' => $reservation->getProjectionEvent(),
-                //     'movie' => $reservation->getProjectionEvent()->getMovie(),
-                //     'tickets' => $reservation->getTickets(),
-                // ];
-                // // $this->emailSender->makeAndSendEmail($to, $subject, $template, $context);
-                $this->pdfMaker->makePdfFile();
+                $reservationId = $data->metadata['reservation'];
+                /** @var Reservation $reservation */
+                $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
+                $to = "jeremy.snnk@gmail.com";
+                // $to = $reservation->getUser()->getEmail();
+                $subject = "Votre achat";
+                $template = "email/email_tickets.html.twig";
+                $context = [ 'resa' => $reservation ];
+                $this->emailSender->makeAndSendEmail($to, $subject, $template, $context,  $this->pdfMaker->makeTicketsPdfFile($reservation) ?? null,);
                 
 
                 return new Response('Transaction et réalisation effectuée avec succès');
