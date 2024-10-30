@@ -25,6 +25,26 @@ class AppFixtures extends Fixture
 
     public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
 
+    public function getLastWednesday(): DateTime
+    {
+        $lastWednesday = new \DateTime();
+        $dayOfWeek = (int) $lastWednesday->format('w'); // 0 (dimanche) à 6 (samedi)
+        // if ($dayOfWeek === 3) return $lastWednesday;
+        // if ($dayOfWeek === 4) return $lastWednesday->modify("-1 days");
+        // if ($dayOfWeek === 5) return $lastWednesday->modify("-2 days");
+        // if ($dayOfWeek === 6) return $lastWednesday->modify("-3 days");
+        // if ($dayOfWeek === 0) return $lastWednesday->modify("-4 days");
+        // if ($dayOfWeek === 1) return $lastWednesday->modify("-5 days");
+        // if ($dayOfWeek === 2) return $lastWednesday->modify("-6 days");
+
+        // Reculer de plusieurs jours pour atteindre le dernier mercredi (3 = mercredi)
+        $daysToSubtract = ($dayOfWeek >= 3) ? $dayOfWeek - 3 : $dayOfWeek + 4;
+        $lastWednesday->modify("-$daysToSubtract days");
+    
+        return $lastWednesday;
+    }
+    
+
     public function load(ObjectManager $manager)
     {
         // Support loading fixtures size
@@ -81,7 +101,8 @@ class AppFixtures extends Fixture
         if (!is_dir($destinationDir)) {
             mkdir($destinationDir, 0777, true);
         }
-        foreach ($movies_data as $value) {
+
+        foreach ($movies_data as $key => $value) {
             copy("src/DataFixtures/medias/movies_posters/{$value['imageCover']}", "{$destinationDir}{$value['imageCover']}");
             $movie = (new Movie())
                 ->setTitle($value["title"])
@@ -96,7 +117,10 @@ class AppFixtures extends Fixture
                 ->setPosters([])
                 ->setCasting($value["casting"])
                 ->setCoverImageName($value['imageCover'])
+                ->setCreatedAt(new DateTime($value['createdAt']))
                 ;
+                if ($key + 1 > count($movies_data) / 2 ) // si on est à la moitié des films des fixtures
+                $movie->setCreatedAt($this->getLastWednesday());
             
             foreach ($value['movieCategories'] as $categoryName) {
                 if (isset($movieCategories[$categoryName])) {
