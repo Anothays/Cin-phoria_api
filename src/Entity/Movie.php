@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -15,6 +16,7 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -27,38 +29,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     normalizationContext: ['groups' => ['movie']],
     denormalizationContext: ['groups' => ['movie', 'movie:write']],
-    operations: [
-        // new Post(
-        //     name: 'coucou',
-        //     uriTemplate: '/coucou/{id}',
-        //     controller: CoucouController::class
-        // ),
-        // new GetCollection(
-        //     name: 'lol',
-        //     uriTemplate: '/lol',
-        //     controller: CoucouController::class,
-        //     // openapi:
-        // ) 
-    ]
 )]
 #[Get()]
 #[GetCollection()]
 #[Post(security: "is_granted('ROLE_ADMIN')")]
 #[Put(security: "is_granted('ROLE_ADMIN')")]
-#[Patch(
-    // controller: RateMovieController::class
-    // name: "api_rate_movie",
-    // uriTemplate: "/movies/rate",
-    // processor: MovieStateProcessor::class,
-    // input: RateMovieDto::class,
-    // uriVariables: [
-    //     'reservation_id' => new Link(
-    //         fromClass: Reservation::class,
-    //         fromProperty: 'id',
-    //         identifiers: ['id'],
-    //     )
-    // ],
-)]
+#[Patch()]
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
 #[Vich\Uploadable]
 // #[QueryParameter(key: ':property', filter: SearchFilter::class)]
@@ -71,9 +47,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     'title' => 'exact',
     ]
 )]
-// #[ApiFilter(DateFilter::class, properties: [
-//     'projectionEvents.beginAt' => 'exact', // Ajoutez ce filtre pour la date
-// ])]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
 class Movie
 {
     #[ORM\Id]
@@ -124,7 +98,7 @@ class Movie
 
     #[ORM\Column]
     #[Groups(["movie", 'reservation'])]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
@@ -161,13 +135,12 @@ class Movie
      * @var Collection<int, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'movie')]
-    #[Groups(["movie"])]
     private Collection $comments;
 
     
 
     public function __construct() {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->movieCategories = new ArrayCollection();
         $this->projectionEvents = new ArrayCollection();
@@ -311,12 +284,12 @@ class Movie
         return $this->noteTotalVotes ? $this->notesTotalPoints / $this->noteTotalVotes : null;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
@@ -465,9 +438,11 @@ class Movie
     /**
      * @return Collection<int, Comment>
      */
+    #[Groups(["movie"])]
     public function getComments(): Collection
     {
-        return $this->comments;
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('isVerified', true));
+        return $this->comments->matching($criteria);
     }
 
     public function addComment(Comment $comment): static

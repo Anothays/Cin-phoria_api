@@ -21,7 +21,7 @@ services:
     container_name: bdd
     restart: always
     env_file:
-      - .env.dev
+      - .env.database
     ports:
       #   # To allow the host machine to access the ports below, modify the lines below.
       #   # For example, to allow the host to connect to port 3306 on the container, you would change
@@ -31,5 +31,19 @@ services:
     volumes:
       - data:/var/lib/mysql
 
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    env_file:
+      - .env.mongodb
+    volumes:
+      - mongodata:/data/db
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: example
+
 volumes:
   data:
+  mongodata:

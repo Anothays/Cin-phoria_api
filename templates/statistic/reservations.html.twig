@@ -1,0 +1,31 @@
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Nombre d'entrées sur les 7 derniers jours{% endblock %}
+
+{% block main %}
+    <div class="container">
+        
+        {% if ticketCountByMovie is empty %}
+            <div class="alert alert-info">Aucune réservation trouvée pour la période sélectionnée.</div>
+        {% else %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Film</th>
+                        <th>Billets vendus</th>
+                        <th>Recette générée</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in ticketCountByMovie %}
+                        <tr>
+                            <td>{{ ticket.movieTitle }}</td>
+                            <td>{{ ticket.count }}</td>
+                            <td>{{ (ticket.amount / 100 )| number_format(2, '.', ',') }} €</td> {# Format du montant avec deux décimales #}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
