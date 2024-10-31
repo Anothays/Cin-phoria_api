@@ -11,6 +11,7 @@ use App\Entity\ProjectionFormat;
 use App\Entity\ProjectionRoom;
 use App\Entity\ProjectionRoomSeat;
 use App\Entity\Reservation;
+use App\Entity\Ticket;
 use App\Entity\TicketCategory;
 use App\Entity\User;
 use App\Entity\UserStaff;
@@ -19,11 +20,15 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Enum\ProjectionEventLanguage;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class AppFixtures extends Fixture
 {
 
-    public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(
+        private UserPasswordHasherInterface $passwordHasher,
+        private DocumentManager $dm,
+    ) {}
 
     public function getLastWednesday(): DateTime
     {
@@ -47,6 +52,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+
         // Support loading fixtures size
         ini_set('memory_limit', '256M'); 
 
@@ -239,22 +245,23 @@ class AppFixtures extends Fixture
         }
 
         // ATTENTION ===> CLASSE A FINIR (RELATION ETC)
-        // Create reservations and tickets
-        // $reservations_data = json_decode(file_get_contents(__DIR__ . '/reservations.json'), true);
-        // $reservations = [];
-        // foreach ($reservations_data as $key => $value) {
-        //     $reservation = (new Reservation())
-        //     ->setPaid($value['is_paid'])
-        //     ->setUpdatedAt((new \DateTimeImmutable())->add((new \DateInterval("PT{$key}M"))))
-        //     ->setUser($users[0])
-        //     ->setProjectionEvent($projectionEvents[0])
-        //     ->addSeat($projectionEvents[0]->getProjectionRoom()->getProjectionRoomSeats()[$key]);
-        //     // $ticket = (new Ticket())->setCategory($ticket_categories[array_rand($ticket_categories)]);
-        //     // $reservation->addTicket($ticket);
-        //     // $manager->persist($ticket);
-        //     $manager->persist($reservation);
-        //     $reservations[] = $reservation;
-        // }
+        // CREATE RESERVATIONS AND TICKETS
+        $reservations_data = json_decode(file_get_contents(__DIR__ . '/reservations.json'), true);
+        $reservations = [];
+        foreach ($reservations_data as $key => $value) {
+            $reservation = (new Reservation())
+            ->setPaid($value['is_paid'])
+            ->setUpdatedAt((new \DateTimeImmutable())->add((new \DateInterval("PT{$key}M"))))
+            ->setUser($users[0])
+            ->setProjectionEvent($projectionEvents[0])
+            ->addSeat($projectionEvents[0]->getProjectionRoom()->getProjectionRoomSeats()[$key]);
+            $ticket = (new Ticket())->setCategory($ticket_categories[array_rand($ticket_categories)]);
+            $reservation->addTicket($ticket);
+            $manager->persist($ticket);
+            $manager->persist($reservation);
+
+            $reservations[] = $reservation;
+        }
 
 
 
@@ -276,14 +283,11 @@ class AppFixtures extends Fixture
         $manager->persist($reservationOver);
 
 
-
-
         // $tickets_data = json_decode(file_get_contents(__DIR__ . '/tickets.json'), true);
         // $tickets = [];
         // foreach ($tickets_data as $key => $value) {}
 
         $manager->flush();
-
         
     }
 

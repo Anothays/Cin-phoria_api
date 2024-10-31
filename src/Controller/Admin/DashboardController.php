@@ -8,10 +8,12 @@ use App\Entity\MovieTheater;
 use App\Entity\ProjectionEvent;
 use App\Entity\ProjectionFormat;
 use App\Entity\Reservation;
+use App\Document\Ticket as TicketDoc;
 use App\Entity\Ticket;
 use App\Entity\TicketCategory;
 use App\Entity\User;
 use App\Entity\UserStaff;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -19,6 +21,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+use function Symfony\Component\Clock\now;
 
 #[IsGranted('ROLE_STAFF')]
 class DashboardController extends AbstractDashboardController
@@ -71,6 +75,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Tarifs', 'fa fa-money-bill', TicketCategory::class),
             MenuItem::linkToCrud('Billets', 'fa fa-ticket', Ticket::class),
             MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Comment::class),
+            MenuItem::linkToRoute('statistiques', 'fa fa-chart-line', 'app_reservation_stat')
         ];
     }
 
@@ -80,4 +85,33 @@ class DashboardController extends AbstractDashboardController
     //     ->update(Crud::PAGE_INDEX, Action::NEW, fn ($action) => $action->setLabel('Ajouter une categorie de projection'))
     //     ;
     // }
+
+
+    #[Route('', name: 'app_reservation_stat')]
+    public function test(DocumentManager $dm): Response
+    {
+        $tickets = $dm->createQueryBuilder(TicketDoc::class)
+        ->field('createdAt')->gte(now()->modify('-7 days'))
+        ->sort('movieTitle', 'ASC')
+        ->getQuery()
+        ->execute();
+        $ticketCountByMovie = [];
+        foreach ($tickets as $ticket) {
+            /** @var TicketDoc $ticket */ 
+            $movieTitle = $ticket->movieTitle;
+            
+            if (!isset($ticketCountByMovie[$movieTitle])) {
+                $ticketCountByMovie[$movieTitle] = [
+                    'movieTitle' => $movieTitle,
+                    'count' => 0,
+                    'amount' => 0
+                ];
+            }
+            $ticketCountByMovie[$movieTitle]['count']++;
+            $ticketCountByMovie[$movieTitle]['amount'] += $ticket->price;
+        }
+        return $this->render('statistic/reservations.html.twig', [
+            'ticketCountByMovie' => $ticketCountByMovie,
+        ]);
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
-use App\Document\Product;
+
+use App\Document\Ticket;
+use App\Entity\Reservation as EntityReservation;
 use App\Repository\ReservationRepository;
 use App\Repository\TicketRepository;
 use App\Service\EmailSender;
@@ -28,12 +30,26 @@ class TestController extends AbstractController
     #[Route('/test', name: 'app_test')]
     public function index(DocumentManager $dm): Response
     {
-        $product = (new Product())
-        ->setName("A Foo bar")
-        ->setPrice(234);
-        $dm->persist($product);
-        $dm->flush();
+        $today = new \DateTime();
+        $tickets = $dm->createQueryBuilder(Ticket::class)
+        ->field('isPaid')->equals(true)
+        ->field('createdAt')->gte($today->modify('-1 days'))
+        ->sort('movieTitle', 'ASC')
+        ->getQuery()
+        ->execute()
+        ;
 
-        return new Response('Created product with id ' . $product->getId());
+        $ticketCountByMovie = [];
+        foreach ($tickets as $ticket) {
+            /** @var Ticket $ticket */ 
+            $movieTitle = $ticket->movieTitle;
+            if (!isset($reservationCountByMovie[$movieTitle])) {
+                $reservationCountByMovie[$movieTitle] = 0;
+            }
+            $reservationCountByMovie[$movieTitle]++;
+        }
+
+        dd($tickets, $ticketCountByMovie);
+
     }
 }
