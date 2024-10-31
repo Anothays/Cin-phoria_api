@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Document\Product;
 use App\Repository\ReservationRepository;
 use App\Repository\TicketRepository;
 use App\Service\EmailSender;
 use App\Service\PdfMaker;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,28 +22,18 @@ class TestController extends AbstractController
 {
 
     public function __construct(
-        private EmailSender $emailSender,
-        private PdfMaker $pdfMaker,
+
     ) {}
 
     #[Route('/test', name: 'app_test')]
-    public function index(ReservationRepository $reservationRepository): Response
+    public function index(DocumentManager $dm): Response
     {
+        $product = (new Product())
+        ->setName("A Foo bar")
+        ->setPrice(234);
+        $dm->persist($product);
+        $dm->flush();
 
-        $resa = $reservationRepository->find(2);
-
-        $this->emailSender->makeAndSendEmail(
-            "jeremy.snnk@gmail.com",
-            'TEST BILLETS PJ PDF',
-            'email/email_tickets.html.twig',
-            [
-                'resa' => $resa
-            ],
-            $this->pdfMaker->makeTicketsPdfFile($resa) ?? null,
-            );
-
-        return $this->render('pdf/tickets.html.twig', [
-            'resa' => $resa
-        ]);
+        return new Response('Created product with id ' . $product->getId());
     }
 }
