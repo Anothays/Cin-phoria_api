@@ -145,8 +145,7 @@ class CheckoutController extends AbstractController
     {
         /** @var Reservation $reservation */
         $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
-        $to = "jeremy.snnk@gmail.com";
-        // $to = $reservation->getUser()->getEmail();
+        $to = $reservation->getUser()->getEmail();
         $subject = "Votre achat";
         $template = "email/email_tickets.html.twig";
         $context = [ 'resa' => $reservation ];
