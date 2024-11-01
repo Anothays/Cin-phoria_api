@@ -10,58 +10,61 @@
 
 <body>
   <div class='body'>
-    <div>
-      <img class="logo" src="{{ absolute_url(asset('assets/logos/cinephoria_logo.png')) }}" alt="logo"/>
+    <img class="logo" src="{{ absolute_url(asset('assets/logos/cinephoria_logo.png')) }}" alt="logo"/>
+    <div class="infos">
       <p class="title">{{ resa.projectionEvent.movie.title }}</p>
       <p class='projection-date'>{{ resa.projectionEvent.beginAt | date('d/m/Y')}} à {{ resa.projectionEvent.beginAt | date('H:i')}}</p>
+      <p class="projection-format">{{ resa.projectionEvent.format }}</p>
+      <p> {{ resa.projectionEvent.movieTheater.theaterName }} - salle {{ resa.projectionEvent.projectionRoom.titleRoom }}</p>
+      <div class="seats">
+        <span>sièges : </span>
+        {% for seat in resa.seats %}
+          <span class="seat"> {{ seat.rowAndNumberSeat }} </span>
+        {% endfor %}
+      </div>
+      <p class="price">{{ (resa.totalPrice / 100) | number_format(2, '.', ' ') }} EUR</p>
     </div>
 
-    <p class="projection-format">{{ resa.projectionEvent.format }}</p>
-    
-    <p> {{ resa.projectionEvent.movieTheater.theaterName }} - salle {{ resa.projectionEvent.projectionRoom.titleRoom }}</p>
-    
-    <div class="seats">
-      <span>sièges : </span>
-      {% for seat in resa.seats %}
-        <span class="seat"> {{ seat.rowAndNumberSeat }} </span>
-      {% endfor %}
-    </div>
-
-    <p class="price">{{ (resa.totalPrice / 100) | number_format(2, '.', ' ') }} EUR</p>
-
-    {% if resa.tickets|length is same as(0) %}
-      pas de billets
-    {% endif %}
 
     {% for ticket in resa.tickets %}
-      <div class'qrcode-wrapper'>
+      <div class='qrcode-wrapper'>
         <img class='qrcode' src="{{ qr_code_data_uri(ticket.uniqueCode) }}" />
         <p class='uuid'>{{ ticket.uniqueCode }}</p>
       </div>
-  {% endfor %}
+    {% endfor %}
   </div>
 
 </body>
 
 <style>
+
+  html, body, * {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+  }
+
   .body {
-      display: flex;
+      height: 100%;
       text-align: center;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       font-family: 'Helvetica', sans-serif;
       font-size: 1rem;
       color: #333;
-      padding: 10px;
-      /* border: 1px #839192 solid; */
-      background: whitesmoke;
-      border-radius: 0.2rem;
+      margin: 20px;
+      /* border: 3px red solid; */
+      /* background: grey; */
   }
   .logo {
-    width: 100px;
-    height: auto;
+      width: 100px;
+      height: auto;
+    }
+
+  .infos {
+    padding: 20px;
+    line-height: 1.5rem;
   }
+
+  
   .title {
     font-size: 1.25rem;
     text-align: center;
@@ -96,10 +99,10 @@
     align-items: center;
   }
   .qrcode {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     margin: 0;
-    padding: 0;
+    padding: 5px;
     margin-inline: auto;
   }
   .uuid {

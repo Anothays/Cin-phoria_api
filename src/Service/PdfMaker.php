@@ -3,32 +3,42 @@
 namespace App\Service;
 
 use App\Entity\Reservation;
-use Knp\Snappy\Pdf;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Nucleos\DompdfBundle\Factory\DompdfFactoryInterface;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Twig\Environment;
 
 class PdfMaker
 {
 
   public function __construct(
-    private Pdf $pdf,
     private Environment $twig,
+    private DompdfFactoryInterface $factory,
+    private DompdfWrapperInterface $wrapper,
   ){}
-
+  
   public function makeTicketsPdfFile(Reservation $reservation)
   {
-    $html = $this->twig->render('pdf/tickets.html.twig', ['resa' => $reservation ]);
-    $options = [
-      'page-size' => 'A6',
-      'enable-local-file-access' => true,
-    ];
-
+    $html = $this->twig->render('pdf/pinted_tickets.html.twig', ['resa' => $reservation ]);
     try {
-      $pdf = $this->pdf->getOutputFromHtml($html, $options);
-      return $pdf;
+      $pdf = $this->factory->create();
+      $pdf->loadHtml($html);
+      $pdf->setPaper('A6');
+      $pdf->render();
+      return $pdf->output();
     } catch (\Throwable $th) {
       return false;
     }
   }
 
+
+  public function makeTicketsPdfFile2(Reservation $reservation)
+  {
+    $html = $this->twig->render('pdf/pinted_tickets.html.twig', ['resa' => $reservation ]);
+    $filename = 'lol.pdf';
+    return $this->wrapper->getStreamResponse($html, $filename, [
+      'defaultPaperSize' => \Dompdf\Adapter\CPDF::$PAPER_SIZES['a6']
+    ]);
+  }
+
+ 
 }

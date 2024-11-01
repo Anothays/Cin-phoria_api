@@ -4,31 +4,26 @@ namespace App\Controller;
 
 
 use App\Document\Ticket;
-use App\Entity\Reservation as EntityReservation;
 use App\Repository\ReservationRepository;
-use App\Repository\TicketRepository;
 use App\Service\EmailSender;
 use App\Service\PdfMaker;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Knp\Snappy\Pdf;
 use Twig\Environment;
-use Endroid\QrCode\Builder\BuilderInterface;
-use Endroid\QrCodeBundle\Response\QrCodeResponse;
 
 
 class TestController extends AbstractController
 {
 
     public function __construct(
-
+        private Environment $twig,
+        private EmailSender $emailSender,
     ) {}
 
     #[Route('/test', name: 'app_test')]
-    public function index(DocumentManager $dm): Response
+    public function index(DocumentManager $dm)
     {
         $today = new \DateTime();
         $tickets = $dm->createQueryBuilder(Ticket::class)
@@ -38,7 +33,6 @@ class TestController extends AbstractController
         ->getQuery()
         ->execute()
         ;
-
         $ticketCountByMovie = [];
         foreach ($tickets as $ticket) {
             /** @var Ticket $ticket */ 
@@ -48,8 +42,23 @@ class TestController extends AbstractController
             }
             $reservationCountByMovie[$movieTitle]++;
         }
-
         dd($tickets, $ticketCountByMovie);
+    }
 
+    #[Route('/test2', name: 'app_test2')]
+    public function index2(PdfMaker $pdfMaker, ReservationRepository $reservationRepository): Response
+    {   $resa = $reservationRepository->find(1);
+        $attachent = $pdfMaker->makeTicketsPdfFile($resa);
+        $email = $this->emailSender->makeAndSendEmail(
+            "jeremy.snnk@gmail.com",
+            'TEST',
+            "test/index.html.twig",
+            [ 'resa' => $resa ],
+            $attachent,
+        );
+
+        return new Response($attachent, 200, [
+            "Content-type" => 'application/pdf'
+        ]);
     }
 }

@@ -115,21 +115,14 @@ class CheckoutController extends AbstractController
             $event = Webhook::constructEvent($body, $signature, $webhookSecret);
             if ($event->type === 'checkout.session.completed') {
                 
+                // GENERER LES BILLETS APRES PAIEMENT
                 $data = $event->data->object;
                 $result = $stripe->fulfill_checkout($data['id']);
                 if (!$result) return new Response('Erreur dans la prodécure de réalisation', 500);
                 
                 // //ENVOYER BILLETS PAR EMAIL
                 $reservationId = $data->metadata['reservation'];
-                /** @var Reservation $reservation */
-                $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
-                $to = "jeremy.snnk@gmail.com";
-                // $to = $reservation->getUser()->getEmail();
-                $subject = "Votre achat";
-                $template = "email/email_tickets.html.twig";
-                $context = [ 'resa' => $reservation ];
-                $this->emailSender->makeAndSendEmail($to, $subject, $template, $context,  $this->pdfMaker->makeTicketsPdfFile($reservation) ?? null,);
-                
+                $this->makeAndSendEmailFromReservation($reservationId);
 
                 return new Response('Transaction et réalisation effectuée avec succès');
             }
@@ -139,10 +132,25 @@ class CheckoutController extends AbstractController
         }
     }
 
+    
+
     #[Route('/payment', name: 'payment', methods: ['GET', 'POST'])]
     public function payment(Request $request)
     {
         return $this->json(["success" => $request->getQueryString()]);
+    }
+
+
+    public function makeAndSendEmailFromReservation($reservationId)
+    {
+        /** @var Reservation $reservation */
+        $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
+        $to = "jeremy.snnk@gmail.com";
+        // $to = $reservation->getUser()->getEmail();
+        $subject = "Votre achat";
+        $template = "email/email_tickets.html.twig";
+        $context = [ 'resa' => $reservation ];
+        $this->emailSender->makeAndSendEmail($to, $subject, $template, $context,  $this->pdfMaker->makeTicketsPdfFile($reservation) ?? null,);
     }
 
 }

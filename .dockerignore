@@ -3,4 +3,6 @@ node_modules
 .git
 .*
 !.env
-config/jwt
+config/jwt/*
+var/cache/*
+var/cache/log/*

@@ -77,18 +77,6 @@
     "endroid/qr-code-bundle": {
         "version": "6.0.0"
     },
-    "knplabs/knp-snappy-bundle": {
-        "version": "1.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.5",
-            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
-        },
-        "files": [
-            "config/packages/knp_snappy.yaml"
-        ]
-    },
     "lexik/jwt-authentication-bundle": {
         "version": "3.1",
         "recipe": {
@@ -111,6 +99,18 @@
         },
         "files": [
             "config/packages/nelmio_cors.yaml"
+        ]
+    },
+    "nucleos/dompdf-bundle": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.1",
+            "ref": "ac77a0c751bdccab42ddc73d7290719b31ecb691"
+        },
+        "files": [
+            "config/packages/nucleos_dompdf.yaml"
         ]
     },
     "symfony/apache-pack": {
