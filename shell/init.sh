@@ -9,12 +9,6 @@ else
     echo "Dépendance déjà installées, SKIP COMPOSER INSTALL.";
 fi
 
-# php bin/console doctrine:database:create || echo "Database already exists."
-# echo 'CREATE DATABASE';
-
-# php bin/console doctrine:schema:create
-# echo 'CREATE SCHEMA';
-
 php bin/console cache:warmup --env=prod;
 echo 'WARMUP';
 
