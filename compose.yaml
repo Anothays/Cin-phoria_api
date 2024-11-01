@@ -1,7 +1,7 @@
 services:
   api:
-    # build: .
-    image: "anothay/cinephoria_api"
+    build: .
+    # image: "anothay/cinephoria_api"
     restart: always
     container_name: api
     env_file:
@@ -18,20 +18,20 @@ services:
     restart: always
     env_file:
       - .env.database
-    # ports:
-    #   #   # To allow the host machine to access the ports below, modify the lines below.
-    #   #   # For example, to allow the host to connect to port 3306 on the container, you would change
-    #   #   # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
-    #   #   # See https://docs.docker.com/compose/compose-file/compose-file-v3/#ports for more information.
-    #   - "3306:3306"
+    ports:
+      #   #   # To allow the host machine to access the ports below, modify the lines below.
+      #   #   # For example, to allow the host to connect to port 3306 on the container, you would change
+      #   #   # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
+      #   #   # See https://docs.docker.com/compose/compose-file/compose-file-v3/#ports for more information.
+      - "3306:3306"
     volumes:
       - data:/var/lib/mysql
 
   mongodb:
     image: mongo
     restart: always
-    # ports:
-    #   - "27017:27017"
+    ports:
+      - "27017:27017"
     env_file:
       - .env.mongodb
     volumes:

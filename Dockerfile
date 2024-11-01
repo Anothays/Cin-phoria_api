@@ -1,5 +1,19 @@
 FROM php:8.2-apache
 
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    zip unzip \
+    libxrender1 \
+    libxext6 \
+    libfontconfig1 \
+    xz-utils \
+    libcurl4-openssl-dev \
+    pkg-config \
+    libssl-dev \
+    zlib1g-dev \
+    libpng-dev \
+    && docker-php-ext-install intl gd mysqli pdo pdo_mysql 
+
 WORKDIR /var/www/html/
 
 COPY . .
@@ -18,17 +32,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     a2enmod rewrite && \
     chmod +x ./shell/init.sh ./shell/resetdb.sh
 
-RUN apt-get update && apt-get install -y \
-    libicu-dev \
-    zip unzip \
-    libxrender1 \
-    libxext6 \
-    libfontconfig1 \
-    xz-utils \
-    libcurl4-openssl-dev \
-    pkg-config \
-    libssl-dev \
-    && docker-php-ext-install intl mysqli pdo pdo_mysql 
+
 
 RUN pecl install mongodb \
 && docker-php-ext-enable mongodb

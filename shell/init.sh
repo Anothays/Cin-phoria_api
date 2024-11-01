@@ -15,12 +15,12 @@ fi
 # php bin/console doctrine:schema:create
 # echo 'CREATE SCHEMA';
 
-# php bin/console cache:warmup --env=prod;
-# echo 'WARMUP';
+php bin/console cache:warmup --env=prod;
+echo 'WARMUP';
 
-# chmod -R 775 /var/www/html/var/cache /var/www/html/var/log;
+chmod -R 775 /var/www/html/var/cache /var/www/html/var/log;
 
-# chown -R www-data:www-data /var/www/html/var/cache /var/www/html/var/log;
+chown -R www-data:www-data /var/www/html/var/cache /var/www/html/var/log;
 
 php bin/console lexik:jwt:generate-keypair --overwrite;
 echo 'GENERATE KEYPAIR';
