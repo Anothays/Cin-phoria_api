@@ -52,13 +52,20 @@ class TestController extends AbstractController
         $email = $this->emailSender->makeAndSendEmail(
             "jeremy.snnk@gmail.com",
             'TEST',
-            "test/index.html.twig",
+            "email/email_tickets.html.twig",
             [ 'resa' => $resa ],
-            $attachent,
+            $attachent ?? null,
         );
 
         return new Response($attachent, 200, [
             "Content-type" => 'application/pdf'
         ]);
+    }
+
+    #[Route('/test3', name: 'app_test3')]
+    public function index3(PdfMaker $pdfMaker, ReservationRepository $reservationRepository): Response
+    {
+        $lol = unserialize(file_get_contents('lol.txt'));
+        dd($lol);
     }
 }
