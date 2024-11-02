@@ -276,6 +276,7 @@ class ProjectionEvent
 
     }
 
+    
     public function getAllSeats(): Collection
     {
         return $this->projectionRoom->getProjectionRoomSeats();
@@ -285,5 +286,13 @@ class ProjectionEvent
     public function getMovieTheater(): ?MovieTheater
     {
         return $this->getProjectionRoom()->getMovieTheater();
+    }
+
+    #[Groups(["movie", 'reservation', 'reservation:write'])]
+    public function hasSeatsForReducedMobility(): bool
+    {
+        return $this->projectionRoom->getProjectionRoomSeats()->exists(function($key, $value) {
+            return $value->isForReducedMobility();
+        });
     }
 }
