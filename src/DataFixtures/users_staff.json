@@ -10,7 +10,7 @@
     "firstname": "Jérémy",
     "lastname": "Sananikone",
     "email": "jeremy.snnk@gmail.com",
-    "password": "admin",
+    "password": "staff",
     "roles": ["ROLE_STAFF"]
   }
 ]
