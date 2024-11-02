@@ -58,7 +58,7 @@ class ProjectionRoom
 
     public function __toString()
     {
-        return $this->titleRoom;
+        return "{$this->movieTheater->getTheaterName()} : {$this->titleRoom}";
     }
 
     public function getId(): ?int
