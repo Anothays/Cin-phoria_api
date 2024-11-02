@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     zlib1g-dev \
     libpng-dev \
+    vim \
     && docker-php-ext-install intl gd mysqli pdo pdo_mysql 
 
 WORKDIR /var/www/html/
@@ -31,8 +32,6 @@ RUN sed -ri -e 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf /e
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     a2enmod rewrite && \
     chmod +x ./shell/init.sh ./shell/resetdb.sh
-
-
 
 RUN pecl install mongodb \
 && docker-php-ext-enable mongodb
