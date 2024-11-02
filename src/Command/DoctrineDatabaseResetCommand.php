@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'doctrine:database:reset',
-    description: 'Add a short description for your command',
+    description: 'Reset database executing ./shell/reset_db.sh',
 )]
 class DoctrineDatabaseResetCommand extends Command
 {
