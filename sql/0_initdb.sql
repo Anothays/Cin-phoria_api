@@ -22,7 +22,7 @@ CREATE TABLE `user` (
   `updated_at` DATETIME NOT NULL DEFAULT NOW(),
   `is_verified` TINYINT(1) NOT NULL,
   UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des films
 CREATE TABLE `movie` (
@@ -42,7 +42,7 @@ CREATE TABLE `movie` (
   `duration_in_minutes` INT NOT NULL,
   `cover_image_name` VARCHAR(255) DEFAULT NULL,
   `cover_image_size` INT DEFAULT NULL
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des catégories de films
 CREATE TABLE `movie_category` (
@@ -50,7 +50,7 @@ CREATE TABLE `movie_category` (
   `category_name` VARCHAR(60) NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT NOW(),
   `updated_at` DATETIME DEFAULT NOW()
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des tickets
 CREATE TABLE `ticket_category` (
@@ -59,7 +59,7 @@ CREATE TABLE `ticket_category` (
   `price` INT NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT NOW(),
   `updated_at` DATETIME NOT NULL DEFAULT NOW()
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des salles de cinéma
 CREATE TABLE `movie_theater` (
@@ -68,7 +68,7 @@ CREATE TABLE `movie_theater` (
   `city` VARCHAR(60) NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT NOW(),
   `updated_at` DATETIME NOT NULL DEFAULT NOW()
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des formats de projection
 CREATE TABLE `projection_format` (
@@ -77,7 +77,7 @@ CREATE TABLE `projection_format` (
   `created_at` DATETIME NOT NULL DEFAULT NOW(),
   `updated_at` DATETIME DEFAULT NOW(),
   `extra_charge` INT DEFAULT NULL
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des salles de projection
 CREATE TABLE `projection_room` (
@@ -88,7 +88,7 @@ CREATE TABLE `projection_room` (
   `updated_at` DATETIME DEFAULT NOW(),
   UNIQUE KEY `unique_ProjectionRoom` (`title_room`, `movie_theater_id`),
   FOREIGN KEY (`movie_theater_id`) REFERENCES `movie_theater` (`id`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des événements de projection
 CREATE TABLE `projection_event` (
@@ -103,7 +103,7 @@ CREATE TABLE `projection_event` (
   FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`),
   FOREIGN KEY (`projection_room_id`) REFERENCES `projection_room` (`id`),
   FOREIGN KEY (`format_id`) REFERENCES `projection_format` (`id`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des commentaires
 CREATE TABLE `comment` (
@@ -117,7 +117,7 @@ CREATE TABLE `comment` (
   `is_verified` TINYINT(1) NOT NULL,
   FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des réservations
 CREATE TABLE `reservation` (
@@ -130,7 +130,7 @@ CREATE TABLE `reservation` (
   `has_rate` TINYINT(1) NOT NULL,
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   FOREIGN KEY (`projection_event_id`) REFERENCES `projection_event` (`id`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des sièges dans les salles de projection
 CREATE TABLE `projection_room_seat` (
@@ -143,7 +143,7 @@ CREATE TABLE `projection_room_seat` (
   `updated_at` DATETIME DEFAULT NOW(),
   UNIQUE KEY `unique_seatRow_seatNumber_ProjectionRoom` (`seat_row`, `seat_number`, `projection_room_id`),
   FOREIGN KEY (`projection_room_id`) REFERENCES `projection_room` (`id`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table de réservation des sièges
 CREATE TABLE `reservation_projection_room_seat` (
@@ -152,7 +152,7 @@ CREATE TABLE `reservation_projection_room_seat` (
   PRIMARY KEY (`reservation_id`, `projection_room_seat_id`),
   FOREIGN KEY (`projection_room_seat_id`) REFERENCES `projection_room_seat` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`id`) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des demandes de réinitialisation de mot de passe
 CREATE TABLE `reset_password_request` (
@@ -163,7 +163,7 @@ CREATE TABLE `reset_password_request` (
   `requested_at` DATETIME NOT NULL,
   `expires_at` DATETIME NOT NULL,
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table des tickets
 CREATE TABLE `ticket` (
@@ -188,7 +188,7 @@ CREATE TABLE `user_staff` (
   `created_at` DATETIME NOT NULL DEFAULT NOW(),
   `updated_at` DATETIME NOT NULL DEFAULT NOW(),
   UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
-);
+) DEFAULT CHARSET=utf8mb4;
 
 -- Table d'association entre catégories de films et films
 CREATE TABLE `movie_category_movie` (
@@ -197,5 +197,5 @@ CREATE TABLE `movie_category_movie` (
   PRIMARY KEY (`movie_category_id`, `movie_id`),
   FOREIGN KEY (`movie_category_id`) REFERENCES `movie_category` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8mb4;
 
