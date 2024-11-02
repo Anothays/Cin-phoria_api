@@ -30,6 +30,7 @@ class ProjectionFormat
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["movie", "reservation"])]
     private ?int $extraCharge = null;
 
     /**

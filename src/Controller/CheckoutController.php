@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\TicketCategory;
+use App\Entity\ProjectionEvent;
 use App\Service\EmailSender;
 use App\Service\PdfMaker;
 use App\Service\StripePayment;
@@ -27,7 +28,7 @@ class CheckoutController extends AbstractController
         private PdfMaker $pdfMaker
         ) {}
 
-    #[Route('/checkout', name: 'app_checkout', methods: ['POST', 'GET'])]
+    #[Route('/checkout', name: 'app_checkout', methods: ['POST'])]
     public function index(Request $request)
     {
         
@@ -36,10 +37,18 @@ class CheckoutController extends AbstractController
         
         $lineItems = [];
         $content = json_decode($request->getContent(), true);
+        $reservationRepo = $this->em->getRepository(Reservation::class);
+        $reservation = $reservationRepo->findOneBy(['id' => $content['reservationId']]);
+
+        /** @var ProjectionEvent $projectionEvent  */
+        $projectionEvent =  $reservation->getProjectionEvent();
+
+        if (!$reservation) throw new NotFoundHttpException("Aucune réservation trouvée");
         $ticketCategoryRepo  = $this->em->getRepository(TicketCategory::class);
         foreach($content['tickets'] as $value) {
             $category = $ticketCategoryRepo->findOneBy(["categoryName" => $value['category']]);
             if (!$category) throw new NotFoundHttpException("Aucune categorie " . $value['category'] . " trouvée");
+            $extraCharge = $projectionEvent->getFormat()->getExtraCharge();
             if ($value['count'] <= 0) continue;
             array_push($lineItems, [
                 'price_data' => [
@@ -47,15 +56,12 @@ class CheckoutController extends AbstractController
                     'product_data' => [
                         'name' => $category->getCategoryName(),
                     ],
-                    'unit_amount' => $category->getPrice(), 
+                    'unit_amount' => $category->getPrice() + $extraCharge ?? 0, 
                 ],
                 'quantity' => $value['count'],
             ]);
         }
         
-        $reservationRepo = $this->em->getRepository(Reservation::class);
-        $reservation = $reservationRepo->findOneBy(['id' => $content['reservationId']]);
-        if (!$reservation) throw new NotFoundHttpException("Aucune réservation trouvée");
         
         // Check timeout ==> 5 minutes reached
         $limitDate = new \DateTime();
@@ -123,7 +129,7 @@ class CheckoutController extends AbstractController
 
     
 
-    #[Route('/payment', name: 'payment', methods: ['GET', 'POST'])]
+    #[Route('/payment', name: 'payment', methods: ['POST'])]
     public function payment(Request $request)
     {
         return $this->json(["success" => $request->getQueryString()]);
