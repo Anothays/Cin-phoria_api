@@ -4,28 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\TicketCategory;
-use App\Repository\TicketCategoryRepository;
 use App\Service\EmailSender;
 use App\Service\PdfMaker;
 use App\Service\StripePayment;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Stripe\Checkout\Session;
-use Stripe\Stripe;
-use Stripe\StripeClient;
-use Symfony\Component\Mime\Address;
 use Stripe\Webhook;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\Serializer;
 
 class CheckoutController extends AbstractController
 {
