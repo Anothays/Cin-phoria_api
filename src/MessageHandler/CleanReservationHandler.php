@@ -18,14 +18,15 @@ final class CleanReservationHandler
 
     public function __invoke(CleanReservationMessage $message): void
     {
-        $limitDate = now();
+        $limitDate = new \DateTime();
         $limitDate->modify('-5 minutes');
         // dump($limitDate);
         // $reservations = $this->em->getRepository(Reservation::class)->findAll();
         // foreach ($reservations as $key => $value) {
         //     dump($value->getCreatedAt());
         // }
-
+        dump("REMOVE RESERVATIONS OLDER THAN");
+        dump($limitDate);
         $this->em->createQueryBuilder()
             ->delete(Reservation::class, 'r')
             ->where('r.isPaid = false')
