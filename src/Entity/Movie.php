@@ -38,7 +38,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
 #[Vich\Uploadable]
 // #[QueryParameter(key: ':property', filter: SearchFilter::class)]
-#[ApiFilter(BooleanFilter::class, properties: ['isStaffFavorite'])]
+#[ApiFilter(BooleanFilter::class, properties: ['staffFavorite'])]
 #[ApiFilter(SearchFilter::class, properties: [
     'projectionEvents.beginAt' => 'partial',
     'projectionEvents.projectionRoom.movieTheater.theaterName' => 'exact',
