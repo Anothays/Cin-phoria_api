@@ -12,11 +12,14 @@ if [ ! -e /$CONTAINER_FIRST_STARTUP ]; then
     composer install --optimize-autoloader --no-dev --no-interaction;
     echo 'COMPOSER INSTALL OK';
 
-    php bin/console d:s:u -f
-    echo "DATABASE UPDATED";
+    php bin/console d:d:r -df
+    echo "DATABASE RESET DONE",
 
-    php bin/console d:f:l -nq
-    echo "RESET DATABASE DONE";
+    # php bin/console d:s:u -f
+    # echo "DATABASE UPDATED";
+
+    # php bin/console d:f:l -nq
+    # echo "RESET DATABASE DONE";
 
     php bin/console cache:warmup --env=prod;
     echo 'WARMUP';
