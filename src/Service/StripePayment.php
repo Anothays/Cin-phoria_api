@@ -61,12 +61,14 @@ class StripePayment
 
           if (!$ticketCategory) throw new NotFoundHttpException('Ticket category not found');
 
+          $date = (new \DateTime())->format('Y-m-d H:i:s');
           for ($i = 1; $i <= $item->quantity; $i++) {
-
             $conn->insert('ticket', [
                 'category_id' => $ticketCategory['id'],
                 'reservation_id' => $reservationId,
-                'unique_code' => Uuid::v4()
+                'unique_code' => Uuid::v4(),
+                'created_at' => $date,
+                'updated_at' => $date,
             ]);
           }
         }
