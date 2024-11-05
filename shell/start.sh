@@ -6,6 +6,9 @@ if [ ! -e /$CONTAINER_FIRST_STARTUP ]; then
 
     touch /$CONTAINER_FIRST_STARTUP
 
+    ./shell/wait-for-it.sh --timeout=0 database:3306 
+    echo 'WAIT FOR IT DONE';
+
     composer install --optimize-autoloader --no-dev --no-interaction;
     echo 'COMPOSER INSTALL OK';
 
