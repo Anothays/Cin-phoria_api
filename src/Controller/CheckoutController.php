@@ -88,8 +88,8 @@ class CheckoutController extends AbstractController
             // ]],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => "http://localhost:3000/payment_status/true",
-            'cancel_url' => "http://localhost:3000/payment_status/false",
+            'success_url' => "{$this->params->get('base_url_front')}/payment_status/true",
+            'cancel_url' => "{$this->params->get('base_url_front')}/payment_status/false",
             'metadata' => $metadata,
         ]);
 
