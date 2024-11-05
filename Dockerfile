@@ -31,7 +31,8 @@ RUN sed -ri -e 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf /e
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     a2enmod rewrite && \
-    chmod +x ./shell/start.sh ./shell/resetdb.sh
+    chmod +x ./shell/start.sh ./shell/resetdb.sh && \
+    chmod +x ./shell/wait-for-it.sh
 
 RUN pecl install mongodb \
 && docker-php-ext-enable mongodb
