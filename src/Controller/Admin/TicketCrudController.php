@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Ticket;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -45,6 +47,20 @@ class TicketCrudController extends AbstractCrudController
             AssociationField::new('reservation', 'Réservation liée'),
             // DateTimeField::new('createdAt', 'Émis le'),
         ];
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return parent::configureActions($actions)
+        ->setPermissions([
+            Action::DELETE, 'ROLE_ADMIN',
+            Action::EDIT, 'ROLE_ADMIN'
+        ])
+        ->remove(Crud::PAGE_INDEX, Action::NEW)
+        ->add(Crud::PAGE_INDEX, Action::DETAIL)
+        ->disable(Action::DELETE)
+        ->disable(Action::EDIT)
+        ;
     }
     
 }
