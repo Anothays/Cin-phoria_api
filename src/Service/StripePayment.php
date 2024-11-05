@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Document\Ticket as DocumentTicket;
 use App\Entity\Reservation;
 use App\Entity\Ticket;
 use App\Entity\TicketCategory;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Stripe\Stripe;
@@ -19,7 +21,12 @@ class StripePayment
 
   private $stripeClient;
 
-  public function __construct( readonly private string $clientSecret, readonly private string $webhookSecret, private EntityManagerInterface $em) 
+  public function __construct(
+    readonly private string $clientSecret, 
+    readonly private string $webhookSecret, 
+    private EntityManagerInterface $em,
+    private DocumentManager $dm,
+  ) 
   {
     Stripe::setApiKey($this->clientSecret);
     $this->stripeClient = new StripeClient($clientSecret);
@@ -60,7 +67,6 @@ class StripePayment
           );
 
           if (!$ticketCategory) throw new NotFoundHttpException('Ticket category not found');
-
           $date = (new \DateTime())->format('Y-m-d H:i:s');
           for ($i = 1; $i <= $item->quantity; $i++) {
             $conn->insert('ticket', [
@@ -70,10 +76,26 @@ class StripePayment
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
+
+            try {
+              $movieTitle = $conn->fetchAssociative(
+                "SELECT m.title FROM movie m
+                JOIN projection_event pe ON pe.movie_id = m.id
+                JOIN reservation r ON r.projection_event_id = pe.id
+                WHERE r.id = :reservationId
+                FOR UPDATE",
+                ["reservationId" => $reservationId]
+              );
+              $documentTicket = new DocumentTicket($movieTitle['title'], $ticketCategory['category_name'], $ticketCategory['price']);
+              $this->dm->persist($documentTicket);
+            } catch (\Throwable $th) {
+              return;
+            }
           }
         }
         
         $conn->commit(); 
+        $this->dm->flush();
         return true;
       } else {
         throw new Exception('Erreur de paiement');

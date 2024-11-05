@@ -34,15 +34,15 @@ class TicketCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('movie', 'Film'),
+            TextField::new('movie', 'Film')->hideOnForm(),
             AssociationField::new('category', 'Tarif'),
-            DateTimeField::new('projectionEventDateStart', 'Date')->setFormat('short'),
-            DateTimeField::new('projectionEventDateStart', 'Heure')->setFormat('HH:mm'),
-            TextField::new('movieTheater', 'Cinéma'),
-            TextField::new('projectionRoom', 'Salle'),
-            TextField::new('projectionFormat', 'Projection format'),
-            MoneyField::new('price', 'Prix')->setCurrency('EUR'),
-            AssociationField::new('reservation', 'Réservation liée')->hideOnForm(),
+            DateTimeField::new('projectionEventDateStart', 'Date')->setFormat('short')->hideOnForm(),
+            DateTimeField::new('projectionEventDateStart', 'Heure')->setFormat('HH:mm')->hideOnForm(),
+            TextField::new('movieTheater', 'Cinéma')->hideOnForm(),
+            TextField::new('projectionRoom', 'Salle')->hideOnForm(),
+            TextField::new('projectionFormat', 'Projection format')->hideOnForm(),
+            MoneyField::new('price', 'Prix')->setCurrency('EUR')->hideOnForm(),
+            AssociationField::new('reservation', 'Réservation liée'),
             // DateTimeField::new('createdAt', 'Émis le'),
         ];
     }

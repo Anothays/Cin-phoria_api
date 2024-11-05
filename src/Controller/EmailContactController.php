@@ -32,19 +32,18 @@ class EmailContactController extends AbstractController
         $message = htmlspecialchars($content['message']);
         $object = htmlspecialchars($content['object']);
 
+        if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL)) {
+            return $this->json([
+                "error" => "L'email est invalide."
+            ], 400);
+        }
+
         $email = (new Email())
         ->from($this->parameterBag->get('email'))
         ->to($this->parameterBag->get('email'))
         ->subject("[CONTACT] : {$object}")
         ->html("<p>$username</p><p>{$emailAdress}</p><p>$message</p>")
         ;
-
-        // return $this->json([
-        //     'username' => $username,
-        //     'emailAdress' => $emailAdress,
-        //     'message' => $message,
-        //     'object' => $object,
-        // ]);
 
         try {
             $this->mailer->send($email);

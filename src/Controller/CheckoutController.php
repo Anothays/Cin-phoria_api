@@ -8,6 +8,7 @@ use App\Entity\ProjectionEvent;
 use App\Service\EmailSender;
 use App\Service\PdfMaker;
 use App\Service\StripePayment;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ class CheckoutController extends AbstractController
     public function __construct(
         private ParameterBagInterface $params, 
         private EntityManagerInterface $em, 
+        private DocumentManager $dm, 
         private ParameterBagInterface $parameterBag,
         private EmailSender $emailSender,
         private PdfMaker $pdfMaker
@@ -102,7 +104,7 @@ class CheckoutController extends AbstractController
     {
         $webhookSecret = $this->params->get('stripe_secret_webhook');
         $stripeApiKey = $this->params->get('stripe_secret_key');
-        $stripe = new StripePayment($stripeApiKey, $webhookSecret, $this->em);
+        $stripe = new StripePayment($stripeApiKey, $webhookSecret, $this->em, $this->dm);
         
         try {
             $signature = $request->headers->get('stripe-signature');
