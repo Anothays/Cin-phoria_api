@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProjectionRoomSeatRepository::class)]
 #[ApiResource]
@@ -18,15 +19,19 @@ class ProjectionRoomSeat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['reservation', 'reservation:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 1)]
+    #[Groups(['reservation', 'reservation:write'])]
     private ?string $seatRow = null;
 
     #[ORM\Column]
+    #[Groups(['reservation', 'reservation:write'])]
     private ?int $seatNumber = null;
 
     #[ORM\Column]
+    #[Groups(['reservation', 'reservation:write'])]
     private ?bool $isForReducedMobility = null;
 
     #[ORM\Column(nullable: true)]
@@ -51,6 +56,7 @@ class ProjectionRoomSeat
         $this->reservations = new ArrayCollection();
     }
 
+    #[Groups(['reservation', 'reservation:write'])]
     public function getRowAndNumberSeat(): string
     {
         return $this->seatRow . $this->seatNumber;

@@ -128,6 +128,7 @@ class Reservation
     }
 
     #[ApiProperty(description: "Le prix total calculé à partir de chaque billet et du type de séance")]
+    #[Groups(['reservation', 'reservation:write'])]
     public function getTotalPrice(): ?int
     {
         $reducer = function($carry, Ticket $item) {

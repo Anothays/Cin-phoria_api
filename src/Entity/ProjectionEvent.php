@@ -152,6 +152,7 @@ class ProjectionEvent
     }
 
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'H:i'])]
+    #[Groups(['movie', 'reservation', 'reservation:write'])]
     public function getEndAt(): ?\DateTimeInterface
     {
         return (new DateTime($this->beginAt->format('Y-m-d H:i:s')))->modify("+{$this->movie->getDurationInMinutes()} minutes");
