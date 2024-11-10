@@ -11,11 +11,7 @@ use App\Entity\User;
 use App\Security\Jwt;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ReservationProvider implements ProviderInterface
 {
@@ -34,10 +30,15 @@ class ReservationProvider implements ProviderInterface
         ]);
 
         if ($operation instanceof GetCollection) {
-            $reservations = $this->em->getRepository(Reservation::class)->findBy([
-                'user' => $user,
-                'isPaid' => true
-            ]);
+            $reservations = $this->em->getRepository(Reservation::class)
+            ->createQueryBuilder('r')
+            ->join('r.projectionEvent', 'p')
+            ->where('r.user = :user')
+            ->andWhere('r.isPaid = true')
+            ->setParameter('user', $user)
+            ->orderBy('p.beginAt', 'DESC')
+            ->getQuery()
+            ->getResult();
             return $reservations;
 
         } elseif ($operation instanceof Get) {
