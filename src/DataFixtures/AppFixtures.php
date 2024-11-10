@@ -22,6 +22,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
             UserFixtures::class,
             TheaterFixtures::class, // MovieTheater + Rooms + Seats + Ticket categories + Movie categories + Projection formats
             MovieFixtures::class, // Movie + ProjectionEvents
+            ReservationsFixtures::class // Reservation + Tickets
         ];
     }
 }
