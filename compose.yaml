@@ -26,6 +26,9 @@ services:
       - "3306:3306"
     volumes:
       - data:/var/lib/mysql
+      # - ./sql/0_initdb.sql:/docker-entrypoint-initdb.d/0_initdb.sql
+      # - ./sql/1_insert_users.sql:/docker-entrypoint-initdb.d/1_insert_users.sql
+      # - ./sql/2_insert_data.sql:/docker-entrypoint-initdb.d/2_insert_data.sql
 
   mongodb:
     image: mongo
