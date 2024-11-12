@@ -25,6 +25,10 @@ class Incident
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'incidents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ProjectionRoom $projectionRoom = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +66,18 @@ class Incident
     public function setUpdatedAt(\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getProjectionRoom(): ?ProjectionRoom
+    {
+        return $this->projectionRoom;
+    }
+
+    public function setProjectionRoom(?ProjectionRoom $projectionRoom): static
+    {
+        $this->projectionRoom = $projectionRoom;
 
         return $this;
     }

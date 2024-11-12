@@ -49,12 +49,19 @@ class ProjectionRoom
     #[ORM\OneToMany(targetEntity: ProjectionEvent::class, mappedBy: 'projectionRoom')]
     private Collection $projectionEvents;
 
+    /**
+     * @var Collection<int, Incident>
+     */
+    #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'projectionRoom', orphanRemoval: true)]
+    private Collection $incidents;
+
     public function __construct()
     {
         $this->projectionRoomSeats = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTime();
         $this->projectionEvents = new ArrayCollection();
+        $this->incidents = new ArrayCollection();
     }
 
     public function __toString()
@@ -169,6 +176,36 @@ class ProjectionRoom
             // set the owning side to null (unless already changed)
             if ($projectionEvent->getProjectionRoom() === $this) {
                 $projectionEvent->setProjectionRoom(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Incident>
+     */
+    public function getIncidents(): Collection
+    {
+        return $this->incidents;
+    }
+
+    public function addIncident(Incident $incident): static
+    {
+        if (!$this->incidents->contains($incident)) {
+            $this->incidents->add($incident);
+            $incident->setProjectionRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIncident(Incident $incident): static
+    {
+        if ($this->incidents->removeElement($incident)) {
+            // set the owning side to null (unless already changed)
+            if ($incident->getProjectionRoom() === $this) {
+                $incident->setProjectionRoom(null);
             }
         }
 
