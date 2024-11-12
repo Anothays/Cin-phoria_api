@@ -19,11 +19,11 @@ class ProjectionRoom
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["movie", "reservation"])]
+    #[Groups(["movie", "reservation", "movieTheater", "movieTheater:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 2)]
-    #[Groups(["movie", "reservation"])]
+    #[Groups(["movie", "reservation", "movieTheater", "movieTheater:write"])]
     private ?string $titleRoom = null;
 
     #[ORM\Column(nullable: true)]
@@ -36,6 +36,7 @@ class ProjectionRoom
      * @var Collection<int, ProjectionRoomSeat>
      */
     #[ORM\OneToMany(targetEntity: ProjectionRoomSeat::class, mappedBy: 'projectionRoom', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[Groups(["movieTheater", "movieTheater:write"])]
     private Collection $projectionRoomSeats;
 
     #[ORM\ManyToOne(inversedBy: 'projectionRooms')]
