@@ -19,19 +19,19 @@ class ProjectionRoomSeat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['reservation', 'reservation:write'])]
+    #[Groups(['reservation', 'reservation:write', 'projectionRoom'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 1)]
-    #[Groups(['reservation', 'reservation:write'])]
+    #[Groups(['reservation', 'reservation:write', 'projectionRoom'])]
     private ?string $seatRow = null;
 
     #[ORM\Column]
-    #[Groups(['reservation', 'reservation:write'])]
+    #[Groups(['reservation', 'reservation:write', 'projectionRoom'])]
     private ?int $seatNumber = null;
 
     #[ORM\Column]
-    #[Groups(['reservation', 'reservation:write'])]
+    #[Groups(['reservation', 'reservation:write', 'projectionRoom'])]
     private ?bool $isForReducedMobility = null;
 
     #[ORM\Column(nullable: true)]

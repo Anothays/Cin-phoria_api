@@ -43,6 +43,7 @@ class MovieTheater
      * @var Collection<int, ProjectionRoom>
      */
     #[ORM\OneToMany(targetEntity: ProjectionRoom::class, mappedBy: 'movieTheater', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[Groups(["movieTheater"])]
     private Collection $projectionRooms;
 
     public function __construct()

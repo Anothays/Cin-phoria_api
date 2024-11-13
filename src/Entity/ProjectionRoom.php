@@ -13,7 +13,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProjectionRoomRepository::class)]
 #[UniqueConstraint('unique_ProjectionRoom', ['title_room', 'movie_theater_id'])]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['projectionRoom']],
+    denormalizationContext: ['groups' => ['projectionRoom:write']],
+)]
 class ProjectionRoom
 {
     #[ORM\Id]
@@ -36,7 +39,7 @@ class ProjectionRoom
      * @var Collection<int, ProjectionRoomSeat>
      */
     #[ORM\OneToMany(targetEntity: ProjectionRoomSeat::class, mappedBy: 'projectionRoom', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    #[Groups(["movieTheater", "movieTheater:write"])]
+    #[Groups(["projectionRoom", "projectionRoom:write"])]
     private Collection $projectionRoomSeats;
 
     #[ORM\ManyToOne(inversedBy: 'projectionRooms')]
