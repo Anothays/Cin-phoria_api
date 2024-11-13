@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\User;
+use App\Entity\UserStaff;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -19,26 +20,29 @@ final class AuthenticationListener
     #[AsEventListener(event: AuthenticationSuccessEvent::class)]
     public function onAuthenticationSuccessEvent(AuthenticationSuccessEvent $event): void
     {   
-        $userEmail = $event->getUser()->getUserIdentifier();
-        $query = $this->em->createQueryBuilder()
-        ->select('u.isVerified')
-        ->from(User::class, 'u')
-        ->where('u.email = :email')
-        ->setParameter('email', $userEmail)
-        ->getQuery();
-
-        $isVerified = $query->getSingleScalarResult();
-
-        if (!$isVerified) {
-            throw new \Exception("Vous n'avez pas confirmé votre email.");
+        $user = $event->getUser();
+        // Check if email is verified for customer user
+        if ($user instanceof User) {
+            $userEmail = $user->getUserIdentifier();
+            $query = $this->em->createQueryBuilder()
+            ->select('u.isVerified')
+            ->from(User::class, 'u')
+            ->where('u.email = :email')
+            ->setParameter('email', $userEmail)
+            ->getQuery();
+            
+            $isVerified = $query->getSingleScalarResult();
+            
+            if (!$isVerified) {
+                throw new \Exception("Vous n'avez pas confirmé votre email.");
+            }
         }
-
-
-        $user = $this->serializer->serialize($event->getUser(), 'jsonld', ['groups' => ['user']]);
-
-        $userDataArray = json_decode($user, true);
         
-        // dump($userDataArray);
+        
+        $userData = $this->serializer->serialize($user, 'jsonld', ['groups' => ['user']]);
+        $userDataArray = json_decode($userData, true);
+        
         $event->setData(['user' => $userDataArray, ...$event->getData() ]);
+
     }
 }

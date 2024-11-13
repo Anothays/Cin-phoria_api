@@ -2,24 +2,32 @@
 
 namespace App\Entity;
 
-
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[MappedSuperclass()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user']],
+    denormalizationContext: ['groups' => ['user:write']],
+)]
 abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     #[ORM\Column(length: 60)]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 60)]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user', 'user:write', 'movie'])]
     private ?string $email = null;
 
     /**
@@ -32,6 +40,7 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['user', 'user:write', 'movie'])]
     private array $roles = [];
 
     #[ORM\Column]

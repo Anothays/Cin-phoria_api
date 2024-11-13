@@ -18,9 +18,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['user']],
-    denormalizationContext: ['groups' => ['user:write']],
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_USER")', 
@@ -33,17 +32,12 @@ use Symfony\Component\Serializer\Attribute\Groups;
         ),
         new Put(
             security: 'is_granted("ROLE_USER")',
-            
-            // uriTemplate: '/reservations/{id}',
-            // controller: CoucouController::class,
-            // read: false,
         ),
         new Patch(
             security: 'is_granted("ROLE_USER")'
         )
     ],
 )]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User extends UserAbstract
 {
     #[ORM\Id]
@@ -52,33 +46,12 @@ class User extends UserAbstract
     #[Groups(['user', 'user:write', 'movie'])]
     private ?int $id = null;
 
-    #[Groups(['user', 'user:write', 'movie'])]
-    private ?string $email = null;
-
-    /**
-     * @var list<string> The user roles
-     */
-    #[Groups(['user:write', 'movie'])]
-    private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
-    #[Groups(['user','user:write', 'movie'])]
-    private ?string $password = null;
-
     /**
      * @var Collection<int, Reservation>
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
     #[Groups(['user', 'user:write', 'movie'])]
     private Collection $reservations;
-
-    #[Groups(['user', 'user:write', 'movie'])]
-    private ?string $firstname = null;
-
-    #[Groups(['user', 'user:write', 'movie'])]
-    private ?string $lastname = null;
 
     #[ORM\Column]
     private bool $isVerified = false;
