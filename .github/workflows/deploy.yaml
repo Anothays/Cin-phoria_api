@@ -25,3 +25,17 @@ jobs:
           # platforms: linux/amd64,linux/arm64
           push: true
           tags: anothay/cinephoria_api:latest
+  deploy:
+    needs: docker
+    name: deploy image on VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: install ssh keys
+        run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@{{ secrets.SSH.HOST }} -p ${{ secrets.SSH_PORT }} "cd ${{ secrets.SSH_WORKDIR }} && docker compose pull && docker compose up -d && exit "
+      - name: cleanup
+        run: rm -rf ~/.ssh
