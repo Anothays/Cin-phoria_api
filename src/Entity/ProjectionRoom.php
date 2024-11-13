@@ -22,11 +22,11 @@ class ProjectionRoom
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["movie", "reservation", "movieTheater", "movieTheater:write"])]
+    #[Groups(["projectionRoom", "movie", "reservation", "movieTheater", "movieTheater:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 2)]
-    #[Groups(["movie", "reservation", "movieTheater", "movieTheater:write"])]
+    #[Groups(["projectionRoom", "movie", "reservation", "movieTheater", "movieTheater:write"])]
     private ?string $titleRoom = null;
 
     #[ORM\Column(nullable: true)]
@@ -56,6 +56,7 @@ class ProjectionRoom
      * @var Collection<int, Incident>
      */
     #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'projectionRoom', orphanRemoval: true)]
+    #[Groups(["projectionRoom", "projectionRoom:write"])]
     private Collection $incidents;
 
     public function __construct()
