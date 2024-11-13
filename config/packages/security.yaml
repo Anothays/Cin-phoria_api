@@ -19,6 +19,23 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
+    # For desktop application
+    staff_login:
+      provider: app_user_staff_provider
+      pattern: ^/api/staff/login
+      stateless: true
+      json_login:
+        check_path: /api/staff/login_check
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+    staff_api:
+      provider: app_user_staff_provider
+      pattern: ^/api/staff
+      stateless: true
+      jwt: ~
+
+    # For front-end website
     login:
       provider: app_user_provider
       pattern: ^/api/login
@@ -32,6 +49,8 @@ security:
       pattern: ^/api
       stateless: true
       jwt: ~
+
+    # For back-office access
     main:
       lazy: true
       provider: app_user_staff_provider
