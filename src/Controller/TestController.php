@@ -65,6 +65,8 @@ class TestController extends AbstractController
     #[Route('/test3', name: 'app_test3')]
     public function index3(PdfMaker $pdfMaker, ReservationRepository $reservationRepository): Response
     {
+
+        // return $this->json(['hello' => "world"]);
         $lol = unserialize(file_get_contents('lol.txt'));
         dd($lol);
     }
