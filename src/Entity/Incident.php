@@ -3,23 +3,44 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\IncidentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: IncidentRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['incident']],
+    denormalizationContext: ['groups' => ['incident:write']],
+    security: "is_granted('ROLE_ADMIN')",
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new Post(),
+        new Put(),
+        new Patch()
+    ]
+)]
 class Incident
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["incident", "incident:write"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(["incident", "incident:write"])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(["incident", "incident:write"])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -27,6 +48,7 @@ class Incident
 
     #[ORM\ManyToOne(inversedBy: 'incidents')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["incident", "incident:write"])]
     private ?ProjectionRoom $projectionRoom = null;
 
     public function getId(): ?int
