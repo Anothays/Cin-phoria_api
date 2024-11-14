@@ -8,7 +8,7 @@ on:
 
 jobs:
   docker:
-    if: ${{ !vars.SKIP_JOB }}
+    # if: ${{ !vars.SKIP_JOB }} # Just for testing
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
