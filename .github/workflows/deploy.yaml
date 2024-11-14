@@ -28,7 +28,7 @@ jobs:
           tags: anothay/cinephoria_api:latest
 
   deploy:
-    # needs: docker
+    needs: docker
     name: deploy image on VPS
     runs-on: ubuntu-latest
     steps:
