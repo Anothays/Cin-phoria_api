@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['user']],
     denormalizationContext: ['groups' => ['user:write']],
+    operations: []
 )]
 abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserInterface
 {
