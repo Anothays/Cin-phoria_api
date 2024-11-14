@@ -6,3 +6,5 @@ node_modules
 config/jwt/*
 var/cache/*
 var/cache/log/*
+compose.yaml
+Dockerfile
