@@ -114,6 +114,7 @@ class Incident
         return $this;
     }
 
+    #[Groups(["incident", "incident:write", "projectionRoom"])]
     public function isResolved(): ?bool
     {
         return $this->isResolved;

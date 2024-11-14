@@ -9,6 +9,7 @@ use App\Entity\ProjectionEvent;
 use App\Entity\ProjectionFormat;
 use App\Entity\Reservation;
 use App\Document\Ticket as TicketDoc;
+use App\Entity\Incident;
 use App\Entity\Ticket;
 use App\Entity\TicketCategory;
 use App\Entity\User;
@@ -75,6 +76,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Tarifs', 'fa fa-money-bill', TicketCategory::class),
             MenuItem::linkToCrud('Billets', 'fa fa-ticket', Ticket::class),
             MenuItem::linkToCrud('Commentaires', 'fa fa-comment', Comment::class),
+            MenuItem::linkToCrud('Incidents', 'fa fa-hammer', Incident::class),
             MenuItem::linkToRoute('statistiques', 'fa fa-chart-line', 'app_reservation_stat')
         ];
     }
