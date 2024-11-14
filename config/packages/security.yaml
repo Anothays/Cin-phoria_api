@@ -13,6 +13,9 @@ security:
       entity:
         class: App\Entity\UserStaff
         property: email
+    all_users:
+      chain:
+        providers: [app_user_provider, app_user_staff_provider]
 
   firewalls:
     dev:
@@ -45,7 +48,7 @@ security:
         success_handler: lexik_jwt_authentication.handler.authentication_success
         failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
-      provider: app_user_provider
+      provider: all_users
       pattern: ^/api
       stateless: true
       jwt: ~
