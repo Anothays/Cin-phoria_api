@@ -7,6 +7,8 @@ use App\Document\Ticket as TicketDoc;
 use App\Entity\ProjectionEvent;
 use App\Entity\Ticket;
 use App\Repository\ProjectionEventRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\Event\PrePersistEventArgs;
@@ -22,12 +24,13 @@ class BeforePersistEntity
     public function prePersist(PrePersistEventArgs $args): void
     {
       $em = $args->getObjectManager();
-      
       if ($args->getObject() instanceof ProjectionEvent) {
         /** @var ProjectionEvent $newProjectionEvent */
         $newProjectionEvent = $args->getObject();
         $newBeginAt = $newProjectionEvent->getBeginAt();
         $newEndAt = $newProjectionEvent->getEndAt();
+        $date = new DateTimeImmutable($newBeginAt->format('Ymd'));
+        // dd($date);
         $projectionRoom = $newProjectionEvent->getProjectionRoom();
         /** @var ProjectionEventRepository $projectionEventRepo */
         $projectionEventRepo = $em->getRepository(ProjectionEvent::class);
@@ -35,17 +38,21 @@ class BeforePersistEntity
         $existingProjectionEvents = $projectionEventRepo
         ->createQueryBuilder('pe')
         ->where('pe.projectionRoom = :room')
-        ->andWhere('pe.beginAt BETWEEN :newBeginAt AND :newEndAt')
+        ->andWhere('pe.beginAt >= :startOfDay')
+        ->andWhere('pe.beginAt <= :endOfDay')
         ->setParameter('room', $projectionRoom)
-        ->setParameter('newBeginAt', $newBeginAt)
-        ->setParameter('newEndAt', $newEndAt)
+        ->setParameter('startOfDay', $date)
+        ->setParameter('endOfDay', $date->modify("+1days"))
         ->getQuery()
         ->getResult();
-        if (count($existingProjectionEvents) > 0) throw new BadRequestHttpException('Salle déjà occupée pendant cet intervalle.');
+
         // checl for endAt computed property
         foreach ($existingProjectionEvents as $existingProjectionEvent) { 
-          if ($existingProjectionEvent->getEndAt() > $newBeginAt && $existingProjectionEvent->getEndAt() < $newEndAt) {
-            throw new BadRequestHttpException('Le temps de séance entre en conflit avec une autre séance.');
+          // dd($existingProjectionEvent->getBeginAt(), $existingProjectionEvent->getEndAt(), $newBeginAt, $newEndAt);
+          if (($existingProjectionEvent->getBeginAt() > $newBeginAt && $existingProjectionEvent->getBeginAt() < $newEndAt) 
+            ||
+            ($existingProjectionEvent->getEndAt() > $newBeginAt && $existingProjectionEvent->getEndAt() < $newEndAt)) {
+            throw new BadRequestHttpException("L'horaire de la séance entre en conflit avec une autre séance.");
           }
         }
         return;

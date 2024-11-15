@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -25,20 +26,24 @@ class MovieCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id', 'ID'),
+            FormField::addTab('Informations'),
+            IdField::new('id', 'ID')->hideOnForm(),
             TextField::new('title', 'Titre'),
             TextField::new("director", 'Réalisateur'),
             ArrayField::new('casting')->hideOnIndex(),
             NumberField::new('minimumAge', 'Age')->hideOnIndex(),
-            NumberField::new('AverageNote', 'Note sur 5'),
+            NumberField::new('durationInMinutes', 'durée (en minutes)')->hideOnIndex(),
+            NumberField::new('AverageNote', 'Note sur 5')->hideOnForm(),
             TextEditorField::new('synopsis')->hideOnIndex(),
-            AssociationField::new('projectionEvents', 'séances'),
             DateField::new('createdAt', 'Rajouté le'),
             DateField::new('releasedOn', 'Sortie le'),
             BooleanField::new('staffFavorite', 'En favoris'),
             TextField::new('coverImageFile', 'Image')->setFormType(VichImageType::class)->onlyOnForms(),
             ImageField::new('coverImageName', 'Image')->setBasePath('/uploads/images')->onlyOnIndex(),
             AssociationField::new('comments', 'Commentaires')->onlyOnDetail(),
+            FormField::addTab('Séances')->hideWhenCreating(),
+            AssociationField::new('projectionEvents', 'séances')
+            ->hideWhenCreating(),
 
         ];
     }
