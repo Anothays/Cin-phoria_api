@@ -56,21 +56,21 @@ class ProjectionEvent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['movie', 'reservation', 'reservation:write', 'projectionEvent'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write', 'projectionEvent'])]
     private ?int $id = null;
 
     #[ORM\Column(enumType: ProjectionEventLanguage::class)]
-    #[Groups(['movie', 'reservation', 'reservation:write'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     private ?ProjectionEventLanguage $language = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'H:i'])]
-    #[Groups(['movie', 'reservation', 'reservation:write'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     private ?\DateTimeInterface $beginAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'projectionEvents')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['movie', 'reservation', 'reservation:write'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     private ?ProjectionFormat $format = null;
 
     #[ORM\ManyToOne(inversedBy: 'projectionEvents')]
@@ -80,7 +80,7 @@ class ProjectionEvent
 
     #[ORM\ManyToOne(inversedBy: 'projectionEvents')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['movie', 'reservation', 'reservation:write'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     private ?ProjectionRoom $projectionRoom = null;
 
     #[ORM\Column(nullable: true)]
@@ -138,7 +138,7 @@ class ProjectionEvent
     }
 
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'd/m/Y'])]
-    #[Groups(['movie', 'reservation', 'reservation:write'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     public function getDate(): ?\DateTimeInterface
     {
         return $this->beginAt;
@@ -283,7 +283,7 @@ class ProjectionEvent
         return $this->projectionRoom->getProjectionRoomSeats();
     }
 
-    #[Groups(["movie", 'reservation', 'reservation:write'])]
+    #[Groups(["movie", 'movie:get', 'reservation', 'reservation:write'])]
     public function getMovieTheater(): ?MovieTheater
     {
         return $this->getProjectionRoom()->getMovieTheater();

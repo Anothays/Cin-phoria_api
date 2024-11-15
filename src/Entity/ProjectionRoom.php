@@ -28,11 +28,11 @@ class ProjectionRoom
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["projectionRoom", "movie", "reservation", "movieTheater", "movieTheater:write"])]
+    #[Groups(["projectionRoom", "movie", 'movie:get', "reservation", "movieTheater", "movieTheater:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 2)]
-    #[Groups(["projectionRoom", "movie", "reservation", "movieTheater", "movieTheater:write"])]
+    #[Groups(["projectionRoom", "movie", 'movie:get', "reservation", "movieTheater", "movieTheater:write"])]
     private ?string $titleRoom = null;
 
     #[ORM\Column(nullable: true)]

@@ -20,7 +20,7 @@ class MovieCategory
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups("category:write")]
+    #[Groups(["category:write",'movie:get','movie:collection'])]
     private ?string $categoryName = null;
 
     #[ORM\Column(nullable: true)]

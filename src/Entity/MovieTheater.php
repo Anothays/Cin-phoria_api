@@ -26,7 +26,7 @@ class MovieTheater
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['movie', "movieTheater", "reservation"])]
+    #[Groups(['movie', 'movie:get', "movieTheater", "reservation"])]
     private ?string $theaterName = null;
 
     #[ORM\Column(length: 60)]

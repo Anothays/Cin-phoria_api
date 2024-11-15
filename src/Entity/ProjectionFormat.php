@@ -20,7 +20,7 @@ class ProjectionFormat
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    #[Groups(["movie", "reservation"])]
+    #[Groups(["movie", 'movie:get', "reservation"])]
     private ?string $projectionFormatName = null;
 
     #[ORM\Column(nullable: true)]

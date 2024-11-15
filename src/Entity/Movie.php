@@ -30,8 +30,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     normalizationContext: ['groups' => ['movie']],
     denormalizationContext: ['groups' => ['movie', 'movie:write']],
 )]
-#[Get()]
-#[GetCollection()]
+#[GetCollection(
+    normalizationContext: ['groups' => ['movie:collection']],
+)]
+#[Get(
+    normalizationContext: ['groups' => ['movie:get']],
+)]
 #[Post(security: "is_granted('ROLE_ADMIN')")]
 #[Put(security: "is_granted('ROLE_ADMIN')")]
 #[Patch()]
@@ -53,51 +57,51 @@ class Movie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?string $director = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?string $synopsis = null;
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?array $casting = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?\DateTimeInterface $releasedOn = null;
 
     #[ORM\Column(type: Types::ARRAY)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private array $posters = [];
 
     #[ORM\Column]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?int $minimumAge = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?bool $staffFavorite = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?int $notesTotalPoints = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?int $noteTotalVotes = null;
 
     #[ORM\Column]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column]
@@ -107,25 +111,25 @@ class Movie
      * @var Collection<int, MovieCategory>
      */
     #[ORM\ManyToMany(targetEntity: MovieCategory::class, mappedBy: 'movies')]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private Collection $movieCategories;
 
     /**
      * @var Collection<int, ProjectionEvent>
      */
     #[ORM\OneToMany(targetEntity: ProjectionEvent::class, mappedBy: 'movie', orphanRemoval: true)]
-    #[Groups(["movie"])]
+    // #[Groups(["movie"])]
     private Collection $projectionEvents;
 
     #[ORM\Column]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?int $durationInMinutes = null;
 
     #[Vich\UploadableField(mapping: 'movies', fileNameProperty: 'coverImageName', size: 'coverImageSize')]
     private ?File $coverImageFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["movie", 'reservation'])]
+    #[Groups(["movie", 'movie:get','movie:collection', 'reservation'])]
     private ?string $coverImageName = null;
 
     #[ORM\Column(nullable: true)]
@@ -284,7 +288,7 @@ class Movie
         return $this;
     }
 
-    #[Groups(['movie', 'reservation'])]
+    #[Groups(['movie', 'movie:get', 'movie:collection', 'reservation'])]
     public function getAverageNote(): ?float
     {
         return $this->noteTotalVotes ? $this->notesTotalPoints / $this->noteTotalVotes : null;
@@ -444,7 +448,7 @@ class Movie
     /**
      * @return Collection<int, Comment>
      */
-    #[Groups(["movie"])]
+    #[Groups(["movie", 'movie:get'])]
     public function getComments(): Collection
     {
         $criteria = Criteria::create()->where(Criteria::expr()->eq('isVerified', true));
@@ -473,7 +477,48 @@ class Movie
         return $this;
     }
 
-    
+    #[Groups(["movie:get"])]
+public function getProjectionEventsSortedByDateAndGroupedByTheater(): array
+{
+    // Trier toutes les séances par date (beginAt)
+    $sortedEvents = $this->projectionEvents->toArray();
+    usort($sortedEvents, fn($a, $b) => $a->getBeginAt() <=> $b->getBeginAt());
+
+    // Grouper les séances par date et puis par cinéma
+    $groupedByDateAndTheater = [];
+    foreach ($sortedEvents as $event) {
+        // Récupérer la date du début de la séance (au format "Y-m-d")
+        $dateKey = $event->getBeginAt()->format('Y-m-d');
+        
+        // Récupérer le nom et les informations du cinéma
+        /** @var MovieTheater $movieTheater */
+        $movieTheater = $event->getProjectionRoom()->getMovieTheater();
+        $theaterName = $movieTheater->getTheaterName();
+        $theaterDetails = [
+            'id' => $movieTheater->getId(),
+            'theaterName' => $movieTheater->getTheaterName(),
+            'city' => $movieTheater->getCity(),
+        ];
+
+        // Initialiser la structure du tableau pour la date si elle n'existe pas
+        if (!isset($groupedByDateAndTheater[$dateKey])) {
+            $groupedByDateAndTheater[$dateKey] = [];
+        }
+
+        // Initialiser la structure du tableau pour le cinéma si elle n'existe pas
+        if (!isset($groupedByDateAndTheater[$dateKey][$theaterName])) {
+            $groupedByDateAndTheater[$dateKey][$theaterName] = [
+                'movieTheater' => $theaterDetails,
+                'projectionEvents' => [],
+            ];
+        }
+
+        // Ajouter l'événement à la bonne date et cinéma
+        $groupedByDateAndTheater[$dateKey][$theaterName]['projectionEvents'][] = $event;
+    }
+
+    return $groupedByDateAndTheater;
+}
 
 
 }
