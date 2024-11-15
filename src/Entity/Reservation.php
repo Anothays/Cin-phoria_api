@@ -9,14 +9,13 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
-use App\Controller\CoucouController;
 use App\Repository\ReservationRepository;
+use App\State\ReservationProcessor;
 use App\State\ReservationProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\MaxDepth;
 
@@ -33,12 +32,12 @@ use Symfony\Component\Serializer\Attribute\MaxDepth;
             security: 'is_granted("ROLE_USER")',
             provider: ReservationProvider::class
         ),
-        new Post(security: 'is_granted("ROLE_USER")'),
+        new Post(
+            security: 'is_granted("ROLE_USER")',
+            processor: ReservationProcessor::class,
+        ),
         new Put(
             security: 'is_granted("ROLE_USER")',
-            // uriTemplate: '/reservations/{id}',
-            // controller: CoucouController::class,
-            // read: false,
         ),
         new Patch(
             security: 'is_granted("ROLE_USER")'

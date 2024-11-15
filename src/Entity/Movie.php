@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\MovieRepository;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -481,7 +482,12 @@ class Movie
 public function getProjectionEventsSortedByDateAndGroupedByTheater(): array
 {
     // Trier toutes les séances par date (beginAt)
-    $sortedEvents = $this->projectionEvents->toArray();
+    $currentDate = new \DateTime("now", new DateTimeZone('Europe/Paris'));
+
+    $sortedEvents = array_filter(
+        $this->projectionEvents->toArray(),
+        fn($event) => $event->getBeginAt() > $currentDate
+    );
     usort($sortedEvents, fn($a, $b) => $a->getBeginAt() <=> $b->getBeginAt());
 
     // Grouper les séances par date et puis par cinéma
