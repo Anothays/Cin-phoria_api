@@ -32,7 +32,7 @@ fi
 php bin/console lexik:jwt:generate-keypair -nq --overwrite;
 echo 'GENERATE KEYPAIR';
 
-php bin/console messenger:consume & 
+php bin/console messenger:consume scheduler_clean_reservations scheduler_add_projection_events & 
 echo 'STARTS SCHEDULER WITH MESSENGER';
 
 apache2-foreground

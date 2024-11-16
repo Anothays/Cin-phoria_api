@@ -8,6 +8,7 @@ use App\Enum\ProjectionEventLanguage;
 use App\Repository\MovieCategoryRepository;
 use App\Repository\ProjectionFormatRepository;
 use App\Repository\ProjectionRoomRepository;
+use DateTimeZone;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -84,7 +85,7 @@ class MovieFixtures extends Fixture implements FixtureGroupInterface
                 ->setLanguage((ProjectionEventLanguage::from($value["language"])))
                 ->setMovie($movies[$value["movie"]])
                 ->setProjectionRoom($projectionRoom)
-                ->setBeginAt((new \Datetime($value["begin_at"]))->modify("+{$i} day"));
+                ->setBeginAt((new \Datetime($value["begin_at"], new DateTimeZone('Europe/Paris')))->modify("+{$i} day"));
                 $manager->persist($projectionEvent);
                 $projectionEvents[] = $projectionEvent;
             }
@@ -96,7 +97,7 @@ class MovieFixtures extends Fixture implements FixtureGroupInterface
     
     public function getLastWednesday(): \DateTime
     {
-        $lastWednesday = new \DateTime();
+        $lastWednesday = new \DateTime('now', new DateTimeZone('Europe/Paris'));
         $dayOfWeek = (int) $lastWednesday->format('w'); // 0 (dimanche) à 6 (samedi)
         $daysToSubtract = ($dayOfWeek >= 3) ? $dayOfWeek - 3 : $dayOfWeek + 4;
         $lastWednesday->modify("-$daysToSubtract days");
