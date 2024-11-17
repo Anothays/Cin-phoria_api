@@ -34,7 +34,7 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(length: 60)]
     private ?string $password = null;
     
     /**
