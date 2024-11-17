@@ -59,7 +59,7 @@ class ProjectionEvent
     #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write', 'projectionEvent'])]
     private ?int $id = null;
 
-    #[ORM\Column(enumType: ProjectionEventLanguage::class)]
+    #[ORM\Column(enumType: ProjectionEventLanguage::class, length: 20)]
     #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     private ?ProjectionEventLanguage $language = null;
 

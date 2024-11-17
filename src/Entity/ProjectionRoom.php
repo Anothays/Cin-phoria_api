@@ -31,7 +31,7 @@ class ProjectionRoom
     #[Groups(["projectionRoom", "movie", 'movie:get', "reservation", "movieTheater", "movieTheater:write"])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 2)]
+    #[ORM\Column(length: 60)]
     #[Groups(["projectionRoom", "movie", 'movie:get', "reservation", "movieTheater", "movieTheater:write"])]
     private ?string $titleRoom = null;
 
