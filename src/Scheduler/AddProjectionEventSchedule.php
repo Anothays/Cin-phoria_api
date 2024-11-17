@@ -20,7 +20,7 @@ final class AddProjectionEventSchedule implements ScheduleProviderInterface
     public function getSchedule(): Schedule
     {
         return (new Schedule())
-            ->add(RecurringMessage::every('2 day', new AddProjectionEventMessage()))
+            ->add(RecurringMessage::every('1 day', new AddProjectionEventMessage()))
             ->stateful($this->cache)
         ;
     }
