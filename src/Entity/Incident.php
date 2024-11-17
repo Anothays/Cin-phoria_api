@@ -56,6 +56,10 @@ class Incident
     #[ORM\Column]
     private ?bool $isResolved = false;
 
+    #[ORM\ManyToOne(inversedBy: 'incidents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?UserStaff $reportedBy = null;
+
     public function __construct() {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTime();
@@ -123,6 +127,18 @@ class Incident
     public function setResolved(bool $isResolved): static
     {
         $this->isResolved = $isResolved;
+
+        return $this;
+    }
+
+    public function getReportedBy(): ?UserStaff
+    {
+        return $this->reportedBy;
+    }
+
+    public function setReportedBy(?UserStaff $reportedBy): static
+    {
+        $this->reportedBy = $reportedBy;
 
         return $this;
     }
