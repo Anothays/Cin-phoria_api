@@ -58,6 +58,7 @@ class Incident
 
     #[ORM\ManyToOne(inversedBy: 'incidents')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["incident", "incident:write"])]
     private ?UserStaff $reportedBy = null;
 
     public function __construct() {
