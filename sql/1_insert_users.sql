@@ -15,7 +15,7 @@ INSERT INTO `user` (firstname, lastname, email, password, roles, created_at, upd
   'john', 
   'doe', 
   'john@doe.com', 
-  '$2y$13$DSuZWjFPp11OOI50YSLMMO40wWGqkgB1rsHud76qaM7TPE3fHXhba', -- johndoe
+  '$2y$13$yYs3m9jWXWpzkbbPYVNje.iXsqIwYDGiELQoA/dQS0v9N7FYtDlze ', -- changeMe
   '["ROLE_USER"]', 
   NOW(), 
   NOW(), 
@@ -28,7 +28,7 @@ INSERT INTO `user_staff` (firstname, lastname, email, password, roles, created_a
   'admin',
   'admin',
   'cinephoria@jeremysnnk.ovh',
-  '$2y$13$OsofQ3O63MnNRF6V6FFC0em2NIVlvqQCqzX07HRdJYozuTjJI282K', -- admin
+  '$2y$13$rBt8GYi3zVdXfX0z3m.z/.KkvKDP0rxLFeh98HPOOvMs0PiyPJX0W', -- changeMe
   '["ROLE_ADMIN", "ROLE_STAFF"]',
   NOW(), 
   NOW()
@@ -37,7 +37,7 @@ INSERT INTO `user_staff` (firstname, lastname, email, password, roles, created_a
   'jérémy',
   'sananikone',
   'jeremy.snnk@gmail.com',
-  '$2y$13$R2Qpl04fiYSXVuUAfKcl1.KCPYit7dTFiLnScJMq6ltRMS8MkAZry', -- staff
+  '$2y$13$6Rntp1AEsohaogP2oKLs4OOOrvDdunsM86.OFlnHgtpcfX8Re0/Bm', -- changeMe
   '["ROLE_STAFF"]',
   NOW(), 
   NOW()

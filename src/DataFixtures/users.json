@@ -3,7 +3,7 @@
     "firstname": "John",
     "lastname": "Doe",
     "email": "john@doe.com",
-    "password": "johndoe",
+    "password": "changeMe",
     "roles": ["ROLE_USER"]
   }
 ]

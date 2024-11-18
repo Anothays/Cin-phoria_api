@@ -3,14 +3,21 @@
     "firstname": "admin",
     "lastname": "admin",
     "email": "cinephoria@jeremysnnk.ovh",
-    "password": "admin",
+    "password": "changeMe",
+    "roles": ["ROLE_ADMIN", "ROLE_STAFF"]
+  },
+  {
+    "firstname": "studi",
+    "lastname": "studi",
+    "email": "studi_cinephoria@jeremysnnk.ovh",
+    "password": "changeMe",
     "roles": ["ROLE_ADMIN", "ROLE_STAFF"]
   },
   {
     "firstname": "Jérémy",
     "lastname": "Sananikone",
-    "email": "jeremy.snnk@gmail.com",
-    "password": "staff",
+    "email": "jeremy_cinephoria@jeremysnnk.ovh",
+    "password": "changeMe",
     "roles": ["ROLE_STAFF"]
   }
 ]
