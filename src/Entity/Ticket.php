@@ -38,6 +38,9 @@ class Ticket
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\Column]
+    private ?bool $isScanned = false;
+
     public function __construct()
     {
         $this->uniqueCode = Uuid::v4();
@@ -149,6 +152,18 @@ class Ticket
         $price = $this->getCategory()->getPrice();
         $extraCharge = $this->getReservation()->getProjectionEvent()->getFormat()->getExtraCharge();
         return  $price + $extraCharge;
+    }
+
+    public function isScanned(): ?bool
+    {
+        return $this->isScanned;
+    }
+
+    public function setScanned(bool $isScanned): static
+    {
+        $this->isScanned = $isScanned;
+
+        return $this;
     }
 
 
