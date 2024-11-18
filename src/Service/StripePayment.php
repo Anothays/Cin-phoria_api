@@ -3,16 +3,11 @@
 namespace App\Service;
 
 use App\Document\Ticket as DocumentTicket;
-use App\Entity\Reservation;
-use App\Entity\Ticket;
-use App\Entity\TicketCategory;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Stripe\Stripe;
 use Stripe\StripeClient;
-use Stripe\Webhook;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\Uuid;
 
