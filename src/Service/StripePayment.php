@@ -75,6 +75,7 @@ class StripePayment
                 'unique_code' => Uuid::v4(),
                 'created_at' => $date,
                 'updated_at' => $date,
+                'is_scanned' => 0,
             ]);
 
             try {
