@@ -30,6 +30,7 @@ class ReservationsFixtures extends Fixture implements FixtureGroupInterface
     public function load(ObjectManager $manager)
     {
 
+        // TERMINATED SUCESSFUL RESERVATIONS
         for ($i=1; $i<=3; $i++) {
             
             $user = $this->em->createQuery("select u from App\Entity\User u where u.email = 'john@doe.com' ")->getOneOrNullResult();
@@ -38,11 +39,11 @@ class ReservationsFixtures extends Fixture implements FixtureGroupInterface
             //     new \Doctrine\ORM\Query\ResultSetMapping()
             // );
             $query = $this->em->createQuery("select p from App\Entity\ProjectionEvent p ")->setMaxResults(1);
+            $result = $query->getResult();
             /** @var ProjectionEvent $projectionEvent  */
-            $projectionEvent = $query->getResult()[0];
-            dump($projectionEvent);
+            $projectionEvent = $result[0];
+            
             $ticketCategory = $this->em->createQuery("select c from App\Entity\TicketCategory c where c.categoryName = 'Tarif Normal' ")->getResult()[0];
-            dump($ticketCategory);
 
             $ticket1 = (new Ticket())->setCategory($ticketCategory);
             $ticket2 = (new Ticket())->setCategory($ticketCategory);
@@ -60,6 +61,50 @@ class ReservationsFixtures extends Fixture implements FixtureGroupInterface
             $manager->persist($ticket2);
             $manager->persist($reservation);
         }
+
+        // PENDING RESERVATIONS
+        for ($i=1; $i<=3; $i++) {
+            
+            $user = $this->em->createQuery("select u from App\Entity\User u where u.email = 'john@doe.com' ")->getOneOrNullResult();
+            $query = $this->em->createQuery("select p from App\Entity\ProjectionEvent p ")->setMaxResults(1);
+            /** @var ProjectionEvent $projectionEvent  */
+            $projectionEvent = $query->getResult()[0];
+            $ticketCategory = $this->em->createQuery("select c from App\Entity\TicketCategory c where c.categoryName = 'Tarif Normal' ")->getResult()[0];
+
+            
+            $reservation = (new Reservation())
+            ->setUser($user)
+            ->setProjectionEvent($projectionEvent)
+            ->setHasRate(false)
+            ->setPaid(false)
+            ->addSeat($projectionEvent->getAvailableSeats()->first())
+            ->addSeat($projectionEvent->getAvailableSeats()->get(1));
+
+            $manager->persist($reservation);
+        }
+
+        // TIMEOUT REACHED RESERVATIONS
+        for ($i=1; $i<=3; $i++) {
+            
+            $user = $this->em->createQuery("select u from App\Entity\User u where u.email = 'john@doe.com' ")->getOneOrNullResult();
+            $query = $this->em->createQuery("select p from App\Entity\ProjectionEvent p ")->setMaxResults(1);
+            /** @var ProjectionEvent $projectionEvent  */
+            $projectionEvent = $query->getResult()[0];
+            $ticketCategory = $this->em->createQuery("select c from App\Entity\TicketCategory c where c.categoryName = 'Tarif Normal' ")->getResult()[0];
+
+            
+            $reservation = (new Reservation())
+            ->setUser($user)
+            ->setProjectionEvent($projectionEvent)
+            ->setCreatedAt(new \DateTimeImmutable('yesterday'))
+            ->setHasRate(false)
+            ->setPaid(false)
+            ->addSeat($projectionEvent->getAvailableSeats()->first())
+            ->addSeat($projectionEvent->getAvailableSeats()->get(1));
+
+            $manager->persist($reservation);
+        }
+        
         
         $manager->flush();
     }
