@@ -16,7 +16,11 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
+
+use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\once;
 
 /**
@@ -25,56 +29,106 @@ use function PHPUnit\Framework\once;
 class CheckoutControllerTest extends ApiTestCase
 {
 
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
-    public function testCheckoutControllerSuccess()
+    public function setUp(): void
     {
-        $client = static::createClient();
-        $container = static::getContainer();
-
-        /** @var EntityManagerInterface $em */
-        $em = $container->get('doctrine')->getManager();
-
-        $timeout = (new \DateTime())->modify("-5 minutes");
-        /** @var Reservation $reservation */
-        $reservations = $em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false and r.createdAt > :timeout ")
-        ->setParameter(':timeout', $timeout)
-        ->getResult();        
-
-        $payload = json_encode([
-            'reservationId' => $reservations[0]->getId(),
-            'tickets' => [["category" => 'Tarif Normal', 'count' => 1]]]
-        );
-        
-        $client->request('POST', '/checkout', ['body' => $payload]);
-        $this->assertResponseIsSuccessful();        
-        $content = json_decode($client->getResponse()->getContent(), true);
-        $this->assertIsString($content['url']);
+        parent::setUp();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
     }
 
-
-
-    public function testCheckoutControllerTimeout()
+    protected function tearDown(): void
     {
+        parent::tearDown();
+        unset($this->databaseTool);
+    }
+
+    public function testCheckoutController()
+    {
+
         $client = static::createClient();
-        $container = static::getContainer();
-
-        /** @var EntityManagerInterface $em */
-        $em = $container->get('doctrine')->getManager();
-
-        $timeout = (new \DateTime())->modify("-5 minutes");
-        /** @var Reservation $reservation */
-        $reservations = $em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false and r.createdAt < :timeout ")
-        ->setParameter(':timeout', $timeout)
-        ->getResult();    
-        
-        $payload = json_encode([
-            'reservationId' => $reservations[0]->getId(),
-            'tickets' => [["category" => 'Tarif Normal', 'count' => 1]]
+        $this->databaseTool->loadFixtures([
+            AppFixtures::class
         ]);
-        
-        $client->request('POST', '/checkout', ['body' => $payload]);
-        $this->assertResponseStatusCodeSame(410);
+
+
+        $container = static::getContainer();
+
+        /** @var EntityManagerInterface $em */
+        $em = $container->get('doctrine')->getManager();
+
+        $reservations = $em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false")->getResult();        
+
+        // if (empty($reservations)) return; // show yellow warning if return 
+        $timeout = (new \DateTime())->modify("-5 minutes");
+
+        foreach ($reservations as $reservation) {
+            
+            /** @var Reservation $reservation */
+
+            $payload = ['reservationId' => $reservation->getId(), 'tickets' => [["category" => 'Tarif Normal', 'count' => 1]]];
+            $client->request('POST', '/checkout', ['json' => $payload]);
+            if ($reservation->getCreatedAt() > $timeout) {
+                $this->assertResponseIsSuccessful();        
+                $content = json_decode($client->getResponse()->getContent(), true);
+                $this->assertIsString($content['url']);
+            } else {
+                $this->assertResponseStatusCodeSame(410);
+            }
+        }
+
     }
+
+    // public function testCheckoutControllerSuccess()
+    // {
+    //     $client = static::createClient();
+    //     $container = static::getContainer();
+
+    //     /** @var EntityManagerInterface $em */
+    //     $em = $container->get('doctrine')->getManager();
+
+    //     $timeout = (new \DateTime())->modify("-5 minutes");
+    //     /** @var Reservation $reservation */
+    //     $reservations = $em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false and r.createdAt > :timeout ")
+    //     ->setParameter(':timeout', $timeout)
+    //     ->getResult();        
+
+    //     $payload = json_encode([
+    //         'reservationId' => $reservations[0]->getId(),
+    //         'tickets' => [["category" => 'Tarif Normal', 'count' => 1]]]
+    //     );
+        
+    //     $client->request('POST', '/checkout', ['body' => $payload]);
+    //     $this->assertResponseIsSuccessful();        
+    //     $content = json_decode($client->getResponse()->getContent(), true);
+    //     $this->assertIsString($content['url']);
+    // }
+
+
+
+    // public function testCheckoutControllerTimeout()
+    // {
+    //     $client = static::createClient();
+    //     $container = static::getContainer();
+
+    //     /** @var EntityManagerInterface $em */
+    //     $em = $container->get('doctrine')->getManager();
+
+    //     $timeout = (new \DateTime())->modify("-5 minutes");
+    //     /** @var Reservation $reservation */
+    //     $reservations = $em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false and r.createdAt < :timeout ")
+    //     ->setParameter(':timeout', $timeout)
+    //     ->getResult();    
+        
+    //     $payload = json_encode([
+    //         'reservationId' => $reservations[0]->getId(),
+    //         'tickets' => [["category" => 'Tarif Normal', 'count' => 1]]
+    //     ]);
+        
+    //     $client->request('POST', '/checkout', ['body' => $payload]);
+    //     $this->assertResponseStatusCodeSame(410);
+    // }
 
 
 
