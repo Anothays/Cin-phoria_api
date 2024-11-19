@@ -101,6 +101,9 @@
             "config/packages/lexik_jwt_authentication.yaml"
         ]
     },
+    "liip/test-fixtures-bundle": {
+        "version": "2.9.2"
+    },
     "nelmio/cors-bundle": {
         "version": "2.5",
         "recipe": {
