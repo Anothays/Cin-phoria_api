@@ -4,24 +4,11 @@ namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\AppFixtures;
-use App\Entity\ProjectionEvent;
-use App\Entity\ProjectionFormat;
-use App\Entity\ProjectionRoomSeat;
 use App\Entity\Reservation;
-use App\Entity\TicketCategory;
-use App\Entity\User;
-use App\Repository\ReservationRepository;
-use App\Repository\TicketCategoryRepository;
-use DateTime;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 
-
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\once;
 
 /**
  * Load before testing otherwise it would be failed ===> php bin/console d:f:l --env=test
