@@ -37,16 +37,17 @@ class CheckoutController extends AbstractController
         $stripeSecretKey = $this->params->get('stripe_secret_key');
         \Stripe\Stripe::setApiKey($stripeSecretKey);
         
-        $lineItems = [];
         $content = json_decode($request->getContent(), true);
         $reservationRepo = $this->em->getRepository(Reservation::class);
         $reservation = $reservationRepo->findOneBy(['id' => $content['reservationId']]);
-
         /** @var ProjectionEvent $projectionEvent  */
         $projectionEvent =  $reservation->getProjectionEvent();
-
         if (!$reservation) throw new NotFoundHttpException("Aucune réservation trouvée");
         $ticketCategoryRepo  = $this->em->getRepository(TicketCategory::class);
+        // dump($reservation);
+        
+        $lineItems = [];
+        
         foreach($content['tickets'] as $value) {
             $category = $ticketCategoryRepo->findOneBy(["categoryName" => $value['category']]);
             if (!$category) throw new NotFoundHttpException("Aucune categorie " . $value['category'] . " trouvée");

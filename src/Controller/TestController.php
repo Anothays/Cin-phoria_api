@@ -4,10 +4,14 @@ namespace App\Controller;
 
 
 use App\Document\Ticket;
+use App\Entity\Reservation;
+use App\Repository\MovieRepository;
 use App\Repository\ReservationRepository;
+use App\Repository\UserRepository;
 use App\Service\EmailSender;
 use App\Service\PdfMaker;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,56 +22,13 @@ class TestController extends AbstractController
 {
 
     public function __construct(
-        private Environment $twig,
-        private EmailSender $emailSender,
+        private EntityManagerInterface $em, 
     ) {}
 
     #[Route('/test', name: 'app_test')]
-    public function index(DocumentManager $dm)
+    public function index(): Response
     {
-        $today = new \DateTime();
-        $tickets = $dm->createQueryBuilder(Ticket::class)
-        ->field('isPaid')->equals(true)
-        ->field('createdAt')->gte($today->modify('-1 days'))
-        ->sort('movieTitle', 'ASC')
-        ->getQuery()
-        ->execute()
-        ;
-        $ticketCountByMovie = [];
-        foreach ($tickets as $ticket) {
-            /** @var Ticket $ticket */ 
-            $movieTitle = $ticket->movieTitle;
-            if (!isset($reservationCountByMovie[$movieTitle])) {
-                $reservationCountByMovie[$movieTitle] = 0;
-            }
-            $reservationCountByMovie[$movieTitle]++;
-        }
-        dd($tickets, $ticketCountByMovie);
-    }
-
-    #[Route('/test2', name: 'app_test2')]
-    public function index2(PdfMaker $pdfMaker, ReservationRepository $reservationRepository): Response
-    {   $resa = $reservationRepository->find(1);
-        $attachent = $pdfMaker->makeTicketsPdfFile($resa);
-        $email = $this->emailSender->makeAndSendEmail(
-            "jeremy.snnk@gmail.com",
-            'TEST',
-            "email/email_tickets.html.twig",
-            [ 'resa' => $resa ],
-            $attachent ?? null,
-        );
-
-        return new Response($attachent, 200, [
-            "Content-type" => 'application/pdf'
-        ]);
-    }
-
-    #[Route('/test3', name: 'app_test3')]
-    public function index3(PdfMaker $pdfMaker, ReservationRepository $reservationRepository): Response
-    {
-
-        // return $this->json(['hello' => "world"]);
-        $lol = unserialize(file_get_contents('lol.txt'));
-        dd($lol);
+        $reservationRepo = $this->em->getRepository(Reservation::class);
+        return $this->json(['hello'=>'lol']);
     }
 }
