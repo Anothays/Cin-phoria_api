@@ -38,7 +38,7 @@ class MovieFixtures extends Fixture implements FixtureGroupInterface
         $destinationDir = "public/uploads/images/";
         if (!is_dir($destinationDir)) mkdir($destinationDir, 0777, true);
         foreach ($movies_data as $key => $value) {
-            copy("src/DataFixtures/medias/movies_posters/{$value['imageCover']}", "{$destinationDir}{$value['imageCover']}");
+            if (getenv('APP_ENV') !== 'test') copy("src/DataFixtures/medias/movies_posters/{$value['imageCover']}", "{$destinationDir}{$value['imageCover']}");
             $movie = (new Movie())
                 ->setTitle($value["title"])
                 ->setDirector($value["director"])
