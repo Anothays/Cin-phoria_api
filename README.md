@@ -1,6 +1,6 @@
 # STUDI - ECF fin 2024 - Cinéphoria
 
-## Lien vers le site déployé
+## Lien vers l'api déployée
 
 https://cinephoria.jeremysnnk.ovh/
 
