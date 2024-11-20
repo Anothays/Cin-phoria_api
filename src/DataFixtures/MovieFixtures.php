@@ -3,16 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Movie;
-use App\Entity\MovieCategory;
 use App\Entity\ProjectionEvent;
-use App\Entity\ProjectionFormat;
 use App\Enum\ProjectionEventLanguage;
 use DateTimeZone;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class MovieFixtures extends Fixture implements FixtureGroupInterface
 {
