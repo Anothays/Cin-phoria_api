@@ -13,6 +13,7 @@
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 /public/uploads/
+.env
 .*
 !.*.dist
 !.github
