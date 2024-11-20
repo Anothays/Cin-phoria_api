@@ -9,9 +9,16 @@
   {
     "firstname": "studi",
     "lastname": "studi",
-    "email": "studi_cinephoria@jeremysnnk.ovh",
+    "email": "studi_cinephoria_admin@jeremysnnk.ovh",
     "password": "changeMe",
     "roles": ["ROLE_ADMIN", "ROLE_STAFF"]
+  },
+  {
+    "firstname": "studi",
+    "lastname": "studi",
+    "email": "studi_cinephoria_staff@jeremysnnk.ovh",
+    "password": "changeMe",
+    "roles": ["ROLE_STAFF"]
   },
   {
     "firstname": "Jérémy",
