@@ -28,6 +28,8 @@ class TestController extends AbstractController
     #[Route('/test', name: 'app_test')]
     public function index(): Response
     {
+        $lol = file_get_contents('lol.json');
+        dd(json_decode($lol, true));
         $reservationRepo = $this->em->getRepository(Reservation::class);
         return $this->json(['hello'=>'lol']);
     }
