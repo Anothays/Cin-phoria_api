@@ -13,8 +13,8 @@
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 /public/uploads/
-.env
 .*
+!.env
 !.*.dist
 !.github
 ###> symfony/phpunit-bridge ###
