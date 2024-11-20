@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: api
     env_file:
-      - .env.dev
+      - .env
     ports:
       - 90:80
     depends_on:
