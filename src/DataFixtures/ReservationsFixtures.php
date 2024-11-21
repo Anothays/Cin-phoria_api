@@ -41,7 +41,7 @@ class ReservationsFixtures extends Fixture implements FixtureGroupInterface
             $manager->persist($reservation);
             $manager->flush();
         }
-
+        
         // TERMINATED SUCESSFUL RESERVATIONS
         if ($_ENV['APP_ENV'] !== 'test') { // Create ticket into test environment will throw error because mongodb is not configured in test environnement currently
             for ($i=1; $i<=3; $i++) {
@@ -69,6 +69,7 @@ class ReservationsFixtures extends Fixture implements FixtureGroupInterface
                 $manager->persist($ticket1);
                 $manager->persist($ticket2);
                 $manager->persist($reservation);
+                $manager->flush();
             }
         }
     }
