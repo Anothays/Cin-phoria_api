@@ -34,6 +34,9 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     chmod +x ./shell/start.sh ./shell/resetdb.sh && \
     chmod +x ./shell/wait-for-it.sh
 
+RUN chown -R www-data:www-data /var/www/html/public && \
+    chmod -R 775 /var/www/html/public
+
 RUN pecl install mongodb \
 && docker-php-ext-enable mongodb
 
