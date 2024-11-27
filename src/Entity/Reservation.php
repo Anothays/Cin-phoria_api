@@ -114,6 +114,7 @@ class Reservation
         return $this;
     }
 
+    #[Groups(['reservation'])]
     public function isPaid(): ?bool
     {
         return $this->isPaid;
