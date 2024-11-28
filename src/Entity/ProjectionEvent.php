@@ -107,6 +107,7 @@ class ProjectionEvent
         return $this->movie->getTitle();
     }
 
+    #[Groups(['reservation', 'reservation:write'])]
     public function getReservedSeats(): array
     {
         $reservations = $this->reservations->getValues();
@@ -277,7 +278,7 @@ class ProjectionEvent
 
     }
 
-    
+    #[Groups(['reservation', 'reservation:write'])]
     public function getAllSeats(): Collection
     {
         return $this->projectionRoom->getProjectionRoomSeats();
