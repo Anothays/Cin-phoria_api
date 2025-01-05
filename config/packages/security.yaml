@@ -21,7 +21,7 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
-
+    ### FOR STAFF -------------------
     # For desktop application
     staff_login:
       provider: app_user_staff_provider
@@ -38,6 +38,7 @@ security:
       stateless: true
       jwt: ~
 
+    ### FOR CLIENT -------------------
     # For front-end website
     login:
       provider: app_user_provider
@@ -53,9 +54,10 @@ security:
       stateless: true
       jwt: ~
 
-    # For back-office access
+    ### FOR STAFF DASHBOARD ------------------- # For back-office access
     main:
       lazy: true
+      login_throttling: true
       provider: app_user_staff_provider
       # custom_authenticator: App\Security\AppAuthenticator
       # login_throttling: true
@@ -86,6 +88,8 @@ security:
   # Note: Only the *first* access control that matches will be used
   access_control:
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
+    - { path: ^/test, roles: "ROLE_USER" }
+    - { path: ^/api/staff, roles: ["ROLE_STAFF"] }
     - { path: ^/admin, roles: ["ROLE_ADMIN", "ROLE_STAFF"] }
     # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
