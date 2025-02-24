@@ -25,6 +25,7 @@ security:
     # For desktop application
     staff_login:
       provider: app_user_staff_provider
+      login_throttling: true
       pattern: ^/api/staff/login
       stateless: true
       json_login:
@@ -42,6 +43,7 @@ security:
     # For front-end website
     login:
       provider: app_user_provider
+      login_throttling: true
       pattern: ^/api/login
       stateless: true
       json_login:
@@ -60,7 +62,6 @@ security:
       login_throttling: true
       provider: app_user_staff_provider
       # custom_authenticator: App\Security\AppAuthenticator
-      # login_throttling: true
       # access_denied_handler: App\Security\AccessDeniedHandler
       logout:
         path: app_logout
