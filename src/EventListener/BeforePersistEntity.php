@@ -18,7 +18,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 #[AsDoctrineListener(event: Events::prePersist, priority: 500, connection: 'default')]
 class BeforePersistEntity
 {
-
     public function __construct(private DocumentManager $dm) {}
 
     public function prePersist(PrePersistEventArgs $args): void
@@ -45,7 +44,6 @@ class BeforePersistEntity
         ->setParameter('endOfDay', $date->modify("+1days"))
         ->getQuery()
         ->getResult();
-
         // checl for endAt computed property
         foreach ($existingProjectionEvents as $existingProjectionEvent) { 
           // dd($existingProjectionEvent->getBeginAt(), $existingProjectionEvent->getEndAt(), $newBeginAt, $newEndAt);
@@ -58,10 +56,18 @@ class BeforePersistEntity
         return;
       } elseif (($ticket = $args->getObject()) instanceof Ticket) { // GENERATE TICKET INTO NOSQL DATABASE
         /** @var Ticket $ticket */
-        $ticketDoc = new TicketDoc($ticket->getProjectionEvent()->getMovie()->getTitle(), $ticket->getCategory()->getCategoryName(), $ticket->getCategory()->getPrice());
+        $ticketDoc = new TicketDoc(
+          $ticket->getProjectionEvent()->getMovie()->getTitle(), 
+          $ticket->getCategory()->getCategoryName(), 
+          $ticket->getCategory()->getPrice()
+        );
         $this->dm->persist($ticketDoc);
         $this->dm->flush();
         return;
       }
     }
 }
+
+
+
+

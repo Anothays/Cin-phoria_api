@@ -10,7 +10,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VO",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VO",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VO",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -50,7 +50,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VF",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VF",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -70,7 +70,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VF",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -91,7 +91,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VO",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -101,7 +101,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VO",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -111,7 +111,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VO",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -131,7 +131,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VF",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -141,7 +141,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VF",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -151,7 +151,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VF",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -172,7 +172,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VO",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -182,7 +182,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VO",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -192,7 +192,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VO",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -212,7 +212,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VF",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -222,7 +222,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VF",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -232,7 +232,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VF",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -253,7 +253,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VO",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -263,7 +263,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VO",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -273,7 +273,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VO",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -293,7 +293,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VF",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -303,7 +303,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VF",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -313,7 +313,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VF",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -334,7 +334,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VO",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -344,7 +344,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VO",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -354,7 +354,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VO",
     "begin_at": "20:15",
     "movie": "Inception",
@@ -374,7 +374,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "IMAX",
     "language": "VF",
     "begin_at": "13:15",
     "movie": "Inception",
@@ -384,7 +384,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "3D",
     "language": "VF",
     "begin_at": "17:15",
     "movie": "Inception",
@@ -394,7 +394,7 @@
     }
   },
   {
-    "format": "STANDARD",
+    "format": "4DX",
     "language": "VF",
     "begin_at": "20:15",
     "movie": "Inception",

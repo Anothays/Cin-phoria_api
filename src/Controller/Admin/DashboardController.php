@@ -89,7 +89,7 @@ class DashboardController extends AbstractDashboardController
     // }
 
 
-    #[Route('', name: 'app_reservation_stat')]
+    #[Route('/admin/stats', name: 'app_reservation_stat')]
     public function test(DocumentManager $dm): Response
     {
         $tickets = $dm->createQueryBuilder(TicketDoc::class)

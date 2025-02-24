@@ -91,6 +91,7 @@ class ProjectionRoomSeat
         return $this;
     }
 
+    #[Groups(['reservation', 'reservation:write', 'projectionRoom'])]
     public function isForReducedMobility(): ?bool
     {
         return $this->isForReducedMobility;

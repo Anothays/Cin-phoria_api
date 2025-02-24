@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
+use App\Controller\CheckoutController;
 use App\Repository\ReservationRepository;
 use App\State\ReservationProcessor;
 use App\State\ReservationProvider;
@@ -32,15 +33,113 @@ use Symfony\Component\Serializer\Attribute\MaxDepth;
             security: 'is_granted("ROLE_USER")',
             provider: ReservationProvider::class
         ),
+        // new Get(
+        //     name: 'app_check_payment_status',
+        //     security: 'is_granted("ROLE_USER")',
+        //     controller: CheckoutController::class,
+        //     uriTemplate: '/reservations/check-payment-status/{id}',
+        // ),
         new Post(
             security: 'is_granted("ROLE_USER")',
             processor: ReservationProcessor::class,
+        ),
+        new Post(
+            name: 'checkout',
+            security: 'is_granted("ROLE_USER")',
+            // input: CheckoutRequestDto::class ,
+            // processor: CheckoutProcessor::class ,
+            controller: CheckoutController::class,
+            uriTemplate: '/reservations/checkout/{id}',
+            openapiContext: [
+                'summary' => "process checkout for reservation",
+                "description" => "process stripe checkout page",
+                "parameters" => [
+                    [
+                        "name" => "id",
+                        "in" => "path",
+                        "required" => true,
+                        "description" => "reservation id",
+                        "schema" => [ 'type' => 'string']
+                    ]
+                ],
+                "requestBody" => [
+                    "required" => true,
+                    "content" => [
+                        "application/json" => [
+                            "schema" => [
+                                "type" => "array",
+                                "items" => [
+                                    "type" => "object",
+                                    "properties" => [
+                                        "id" => [
+                                            "type" => "integer",
+                                            "description" => "ticket category Id",
+                                            "example" => 1
+                                        ],
+                                        "category" => [
+                                            "type" => "string",
+                                            "description" => "ticket category name",
+                                            "example" => "Moins de 14 ans"
+                                        ],
+                                        "price" => [
+                                            "type" => "integer",
+                                            "description" => "ticket category price",
+                                            "example" => 1640
+                                        ],
+                                        "count" => [
+                                            "type" => "integer",
+                                            "description" => "quantity of the item",
+                                            "example" => 0
+                                        ]
+                                    ],
+                                    "required" => ["id", "category", "price", "count"]
+                                ]
+                            ],
+                            "example" => [
+                                [
+                                    "id" => 1,
+                                    "category" => "Moins de 14 ans",
+                                    "price" => 1640,
+                                    "count" => 0
+                                ],
+                                [
+                                    "id" => 2,
+                                    "category" => "Étudiant scolaire",
+                                    "price" => 2010,
+                                    "count" => 0
+                                ],
+                                [
+                                    "id" => 3,
+                                    "category" => "Tarif Normal",
+                                    "price" => 2520,
+                                    "count" => 1
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'responses' => [
+                    200 => [
+                        'description' => 'Checkout URL successfully generated.',
+                        'content' => [
+                            'text/plain' => [
+                                'schema' => [
+                                    'type' => 'string',
+                                    'format' => 'uri',
+                                    'example' => 'https://checkout.stripe.com/c/pay/cs_test_a14E1lxC6fJj6xdM86eUCO9ZvBYYMBFKBXH5iyz5YONyXMXBroS8TDEOML#fidkdWxOYHwnPyd1blpxYHZxWjA0VUFRQlRHMTZLV0gzMW5VSmZGY01LUjQyf1B0TTxSMXZCb1c9RD1rVTZyNk5kVTd8d1dTZnxsa0xTVUdAM31VUjZEfzx9SzY1bjRLSTBUQUlBTm1Kf0IyNTVwMElEMjBcVScpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl'
+                                ]
+                            ]
+                        ]
+                    ]
+                 ]
+            ],
         ),
         new Put(
             security: 'is_granted("ROLE_USER")',
         ),
         new Patch(
-            security: 'is_granted("ROLE_USER")'
+            security: 'is_granted("ROLE_USER")',
+            processor: ReservationProcessor::class
         )
     ],
 )]
@@ -114,6 +213,7 @@ class Reservation
         return $this;
     }
 
+    #[Groups(['reservation'])]
     public function isPaid(): ?bool
     {
         return $this->isPaid;

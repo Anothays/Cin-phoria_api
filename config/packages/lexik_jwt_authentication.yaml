@@ -1,4 +1,8 @@
 lexik_jwt_authentication:
+  # invalidate the token on logout by storing it in the cache
+  blocklist_token:
+    enabled: true
+    cache: cache.app
   secret_key: "%env(resolve:JWT_SECRET_KEY)%"
   public_key: "%env(resolve:JWT_PUBLIC_KEY)%"
   pass_phrase: "%env(JWT_PASSPHRASE)%"
@@ -31,11 +35,11 @@ lexik_jwt_authentication:
       cookies:
         - jwt_hp
         - jwt_s
-  set_cookies:
-    jwt:
-      # lifetime: 86400
-      samesite: none
-      # path: /
-      secure: true
-      httpOnly: false
-  remove_token_from_body_when_cookies_used: false
+  # set_cookies:
+  #   jwt:
+  #     lifetime: 1
+  #     samesite: lax
+  #     # path: /
+  #     secure: true
+  #     httpOnly: false
+  remove_token_from_body_when_cookies_used: true

@@ -107,6 +107,7 @@ class ProjectionEvent
         return $this->movie->getTitle();
     }
 
+    #[Groups(['reservation', 'reservation:write'])]
     public function getReservedSeats(): array
     {
         $reservations = $this->reservations->getValues();
@@ -152,7 +153,7 @@ class ProjectionEvent
     }
 
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'H:i'])]
-    #[Groups(['movie', 'reservation', 'reservation:write'])]
+    #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
     public function getEndAt(): ?\DateTimeInterface
     {
         return (new DateTime($this->beginAt->format('Y-m-d H:i:s')))->modify("+{$this->movie->getDurationInMinutes()} minutes");
@@ -277,7 +278,7 @@ class ProjectionEvent
 
     }
 
-    
+    #[Groups(['reservation', 'reservation:write'])]
     public function getAllSeats(): Collection
     {
         return $this->projectionRoom->getProjectionRoomSeats();
@@ -289,7 +290,7 @@ class ProjectionEvent
         return $this->getProjectionRoom()->getMovieTheater();
     }
 
-    #[Groups(["movie", 'reservation', 'reservation:write'])]
+    #[Groups(["movie", "movie:get", 'reservation', 'reservation:write'])]
     public function hasSeatsForReducedMobility(): bool
     {
         return $this->projectionRoom->getProjectionRoomSeats()->exists(function($key, $value) {

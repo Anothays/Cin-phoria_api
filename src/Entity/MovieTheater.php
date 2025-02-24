@@ -30,7 +30,7 @@ class MovieTheater
     private ?string $theaterName = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(["movieTheater"])]
+    #[Groups(['movie', 'movie:get', "movieTheater"])]
     private ?string $city = null;
 
     #[ORM\Column]

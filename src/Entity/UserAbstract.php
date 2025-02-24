@@ -20,15 +20,15 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
 {
 
     #[ORM\Column(length: 60)]
-    #[Groups(['user', 'user:write', 'movie'])]
+    #[Groups(['user', 'user:write', 'movie', 'movie:get'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['user', 'user:write', 'movie'])]
+    #[Groups(['user', 'user:write', 'movie', 'movie:get'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user', 'user:write', 'movie'])]
+    #[Groups(['user', 'user:write', 'movie', 'movie:get'])]
     private ?string $email = null;
 
     /**
@@ -182,6 +182,7 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
+    #[Groups(['user', 'user:write', 'movie', 'movie:get'])]
     public function getFullName(): ?string
     {
         return $this->firstname . " " . $this->lastname;

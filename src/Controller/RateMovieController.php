@@ -6,15 +6,17 @@ use App\Entity\Comment;
 use App\Entity\Reservation;
 use App\Entity\ProjectionEvent;
 use App\Entity\Movie;
+use App\Entity\User;
 use App\Security\Jwt;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 use function Symfony\Component\Clock\now;
 
+#[AsController]
 class RateMovieController extends AbstractController
 {
 
@@ -23,17 +25,8 @@ class RateMovieController extends AbstractController
         private Jwt $jwtManager,
     ) {}
 
-    #[Route('/api/movies/rate', name: 'app_rate_movie', methods: ['POST'])]
-    public function index( Request $request): Response
+    public function __invoke(Movie $movie, Request $request, #[CurrentUser] User $user)
     {
-        $decodedJwtToken = $this->jwtManager->decodeJwt();
-        $query = $this->em->createQueryBuilder()
-        ->select('u')
-        ->from('App\Entity\User', 'u')
-        ->where('u.email = :email' )
-        ->setParameter('email', $decodedJwtToken['username'])
-        ->getQuery();
-        $userFromjwt = $query->getOneOrNullResult();
         
         $content = json_decode($request->getContent(), true);
         if (!$content['reservationId'] || !$content['points'] || !$content['comment']) $this->json(["message" => "Erreur"], 400);
@@ -43,7 +36,6 @@ class RateMovieController extends AbstractController
         
         $points = filter_var((int) $content['points'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 0, "max_range" => 5]]);
         if (!$points) return $this->json(["message" => "Les points doivent être entre 0 et 5"], 400);
-        
         
         $comment = htmlspecialchars($content['comment']);
         
@@ -56,7 +48,7 @@ class RateMovieController extends AbstractController
         $movie =  $projection->getMovie();
         
         $userFromReservation = $reservation->getUser();
-        if ($userFromjwt !== $userFromReservation) return $this->json(["message" => "Ce n'est pas votre réservation"], 401);
+        if ($user !== $userFromReservation) return $this->json(["message" => "Ce n'est pas votre réservation"], 401);
 
         // HANDLE ERRORS
         if (!$reservation) return $this->json(["message" => "Pas de réservation trouvée"], 404);
@@ -103,6 +95,5 @@ class RateMovieController extends AbstractController
             ]);
         }
 
-        
     }
 }
