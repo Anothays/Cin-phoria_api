@@ -26,3 +26,6 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+# personnal files for testing
+tests/mocks/sessionCheckout
