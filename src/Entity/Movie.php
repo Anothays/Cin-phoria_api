@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\RateMovieController;
 use App\Repository\MovieRepository;
 use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,6 +37,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 #[Get(
     normalizationContext: ['groups' => ['movie:get']],
+)]
+#[Post(
+    // normalizationContext: ['groups' => ['movie:get']],
+    name: "notage",
+    controller: RateMovieController::class,
+    uriTemplate: '/movies/note/{id}',
+    security: "is_granted('ROLE_USER')",
+    // outputFormats: "jsonld"
 )]
 #[Post(security: "is_granted('ROLE_ADMIN')")]
 #[Put(security: "is_granted('ROLE_ADMIN')")]
@@ -139,6 +148,7 @@ class Movie
     /**
      * @var Collection<int, Comment>
      */
+    #[Groups(['movie:get'])]
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'movie')]
     private Collection $comments;
 
