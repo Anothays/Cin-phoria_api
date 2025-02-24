@@ -29,19 +29,19 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['comment', 'movie'])]
+    #[Groups(['comment', 'movie:get'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['comment', 'movie'])]
+    #[Groups(['comment', 'movie:get'])]
     private ?string $body = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['comment', 'movie'])]
+    #[Groups(['comment', 'movie:get'])]
     private ?int $rate = null;
 
     #[ORM\Column]
-    #[Groups(['comment', 'movie'])]
+    #[Groups(['comment', 'movie:get'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
@@ -49,7 +49,7 @@ class Comment
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['comment', 'movie'])]
+    #[Groups(['comment', 'movie:get'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
