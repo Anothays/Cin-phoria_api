@@ -9,6 +9,7 @@ parameters:
   stripe_secret_webhook: "%env(STRIPE_SECRET_WEBHOOK)%"
   email: "%env(EMAIL)%"
   base_url_front: "%env(BASE_URL_FRONT)%"
+  root_dir: "%kernel.project_dir%"
 
 services:
   # default configuration for services in *this* file
