@@ -31,7 +31,7 @@ class ProjectionEventCrudController extends AbstractCrudController
             AssociationField::new('projectionRoom', 'Salle'),
             ChoiceField::new('language', 'Version'),
             AssociationField::new('format'),
-            AssociationField::new('soldSeatsCount', 'Places vendues')->hideOnForm(),
+            NumberField::new('soldSeatsCount', 'Places vendues')->hideOnForm(),
             NumberField::new('availableSeatsCount', 'Places restantes')->hideOnForm(),
         ];
     }
@@ -42,7 +42,7 @@ class ProjectionEventCrudController extends AbstractCrudController
         ->setEntityLabelInSingular('Séance')
         ->setEntityLabelInPlural('Séances')
         ->setPageTitle('index', 'Les séances')
-        ->setPaginatorPageSize('20')
+        ->setPaginatorPageSize('100')
         ->showEntityActionsInlined()
         ;
     }

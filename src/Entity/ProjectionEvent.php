@@ -112,7 +112,9 @@ class ProjectionEvent
     {
         $reservations = $this->reservations->getValues();
         $seats = [];
-        foreach ($reservations as $value) array_push($seats, ...$value->getSeats()->getValues());
+        foreach ($reservations as $reservation) {
+            array_push($seats, ...$reservation->getSeats()->getValues());
+        };
         return array_map(fn (ProjectionRoomSeat $seat) => $seat->getId(), $seats);
     }
 
@@ -299,12 +301,7 @@ class ProjectionEvent
         // Convertir en collection pour utiliser les méthodes de filtrage
         $reservedSeatsCollection = new ArrayCollection($reservedSeats);
 
-        // Filtrer les sièges disponibles (ceux qui ne sont pas réservés)
-        $availableSeats = $allSeats->filter(function ($seat) use ($reservedSeatsCollection) {
-            return !$reservedSeatsCollection->contains($seat);
-        });
-
-        return $availableSeats;
+        return $reservedSeatsCollection;
     }
 
     #[Groups(['reservation', 'reservation:write'])]

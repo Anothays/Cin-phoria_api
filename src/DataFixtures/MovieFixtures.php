@@ -64,7 +64,7 @@ class MovieFixtures extends Fixture implements FixtureGroupInterface
         $projection_events_data = json_decode(file_get_contents(__DIR__ . '/projection_events.json'), true);
         $projectionEvents = [];
         // $projectionRooms = $this->getReference(TheaterFixtures::PROJECTION_ROOMS);
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 1; $i < 6; $i++) {
             foreach ($projection_events_data as $value) {
                 // $projectionFormat = $projectionFormatRepository->findOneBy([ 'projectionFormatName' => $value["format"] ]);
                 $projectionFormat = $manager->createQuery("select p from App\Entity\ProjectionFormat p where p.projectionFormatName = :projectionFormatName ")->setParameter(':projectionFormatName', $value["format"])->getOneOrNullResult();
