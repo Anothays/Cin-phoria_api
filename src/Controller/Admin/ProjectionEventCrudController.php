@@ -2,10 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\Admin\Filter\MovieTheaterFilter;
+use App\Controller\Admin\Filter\VersionFilter;
 use App\Entity\ProjectionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -52,6 +55,17 @@ class ProjectionEventCrudController extends AbstractCrudController
         return parent::configureActions($actions)
         ->update(Crud::PAGE_INDEX, Action::NEW, fn ($action) => $action->setLabel('Nouvelle séance'))
         ->add(Crud::PAGE_INDEX, Action::DETAIL);
+        ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(MovieTheaterFilter::new('Cinema'))
+            ->add('projectionRoom')
+            ->add(VersionFilter::new('language', 'Langue'))
+            ->add('format')
+            ->add('beginAt')
         ;
     }
 }
