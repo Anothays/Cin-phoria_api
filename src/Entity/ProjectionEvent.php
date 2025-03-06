@@ -254,6 +254,12 @@ class ProjectionEvent
         return count($this->getAvailableSeats());
     }
 
+    public function getSoldSeatsCount(): int
+    {
+        return count($this->getSoldSeats());
+    }
+
+
     /**
      * @return Collection<int, ProjectionRoomSeat>
      */
@@ -275,7 +281,30 @@ class ProjectionEvent
         });
 
         return $availableSeats;
+    }
 
+     /**
+     * @return Collection<int, ProjectionRoomSeat>
+     */
+    public function getSoldSeats(): Collection
+    {
+        $allSeats = $this->projectionRoom->getProjectionRoomSeats();
+        $reservedSeats = [];
+        foreach ($this->reservations as $reservation) {
+            if (!$reservation->isPaid()) continue;
+            foreach ($reservation->getSeats() as $seat) {
+                $reservedSeats[] = $seat;
+            }
+        }
+        // Convertir en collection pour utiliser les méthodes de filtrage
+        $reservedSeatsCollection = new ArrayCollection($reservedSeats);
+
+        // Filtrer les sièges disponibles (ceux qui ne sont pas réservés)
+        $availableSeats = $allSeats->filter(function ($seat) use ($reservedSeatsCollection) {
+            return !$reservedSeatsCollection->contains($seat);
+        });
+
+        return $availableSeats;
     }
 
     #[Groups(['reservation', 'reservation:write'])]
