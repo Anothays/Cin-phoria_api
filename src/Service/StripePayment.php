@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Document\Ticket as TicketDoc;
+use App\Entity\Reservation;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
@@ -58,6 +60,27 @@ class StripePayment
           'tickets' => $ticketsJson,
         ]
       );
+
+      $reservationRepository = $this->em->getRepository(Reservation::class);
+      /** @var Reservation $reservation */
+      $reservation = $reservationRepository->find($reservationId);
+      $projectionEvent = $reservation->getProjectionEvent();
+      $projectionEventFormat = $projectionEvent->getFormat();
+      $projectionEventFormat->getExtraCharge();
+      $movieTitle = $reservation->getProjectionEvent()->getMovie()->getTitle();
+      $tickets = $reservation->getTickets();
+
+      
+      foreach ($tickets as $ticket) { 
+        /** @var Ticket $ticket */
+        $ticketDoc = new TicketDoc(
+          $movieTitle, 
+          $ticket->getCategory()->getCategoryName(), 
+          $ticket->getCategory()->getPrice() + ($projectionEventFormat->getExtraCharge() ?? 0),
+        );
+        $this->dm->persist($ticketDoc);
+        $this->dm->flush();
+      }
         
       return true;
 

@@ -140,6 +140,7 @@ class CheckoutController extends AbstractController
                 $this->makeAndSendEmailFromReservation($reservationId);
                 return new Response('Transaction et réalisation effectuée avec succès');
             }
+            return new Response('Not handle');
         } catch (\Throwable $th) {
             return new Response('Erreur dans la prodécure de réalisation', 500);
         }
