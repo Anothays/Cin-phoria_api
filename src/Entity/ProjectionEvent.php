@@ -261,19 +261,18 @@ class ProjectionEvent
      */
     public function getAvailableSeats(): Collection
     {
-        $allSeats = $this->projectionRoom->getProjectionRoomSeats();
-        $reservedSeats = [];
-        foreach ($this->reservations as $reservation) {
-            foreach ($reservation->getSeats() as $seat) {
-                $reservedSeats[] = $seat;
-            }
-        }
-        // Convertir en collection pour utiliser les méthodes de filtrage
-        $reservedSeatsCollection = new ArrayCollection($reservedSeats);
-
+        $allRoomSeats = $this->projectionRoom->getProjectionRoomSeats();
+        $reservedSeats = new ArrayCollection(
+            array_merge(
+                ...array_map(
+                    fn($reservation) => $reservation->getSeats()->toArray(), 
+                    $this->reservations->toArray()
+                )
+            )
+        );
         // Filtrer les sièges disponibles (ceux qui ne sont pas réservés)
-        $availableSeats = $allSeats->filter(function ($seat) use ($reservedSeatsCollection) {
-            return !$reservedSeatsCollection->contains($seat);
+        $availableSeats = $allRoomSeats->filter(function ($seat) use ($reservedSeats) {
+            return !$reservedSeats->contains($seat);
         });
 
         return $availableSeats;
@@ -284,18 +283,16 @@ class ProjectionEvent
      */
     public function getSoldSeats(): Collection
     {
-        $allSeats = $this->projectionRoom->getProjectionRoomSeats();
-        $reservedSeats = [];
-        foreach ($this->reservations as $reservation) {
-            if (!$reservation->isPaid()) continue;
-            foreach ($reservation->getSeats() as $seat) {
-                $reservedSeats[] = $seat;
-            }
-        }
-        // Convertir en collection pour utiliser les méthodes de filtrage
-        $reservedSeatsCollection = new ArrayCollection($reservedSeats);
+        $reservedSeats = new ArrayCollection(
+            array_merge(
+                ...array_map(
+                    fn($reservation) => $reservation->getSeats()->toArray(), 
+                    array_filter($this->reservations->toArray(), fn($reservation) => $reservation->isPaid())
+                )
+            )
+        );
 
-        return $reservedSeatsCollection;
+        return $reservedSeats;
     }
 
     #[Groups(['reservation', 'reservation:write'])]
