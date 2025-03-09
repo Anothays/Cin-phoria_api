@@ -153,7 +153,7 @@ class Reservation
 
     #[ORM\Column( options: ['default' => false])]
     #[Groups(['reservation'])]
-    private ?bool $isPaid = false;
+    private bool $isPaid = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -334,8 +334,6 @@ class Reservation
 
     public function addSeat(ProjectionRoomSeat $seat): static
     {
-        // Prevent from adding seat from another projection_room
-        // if ($seat->getProjectionRoom() !== $this->getProjectionEvent()->getProjectionRoom()) return $this; 
 
         if (!$this->seats->contains($seat)) {
             $this->seats->add($seat);
