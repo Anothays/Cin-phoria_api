@@ -64,8 +64,8 @@ class CheckoutController extends AbstractController
             $reservedSeat = $reservation->getSeats()->count();
     
             // Check reservedSeat match ticketsCount
-            if ($reservedSeat === 0 || $reservedSeat !== $ticketsCount) 
-                throw new BadRequestException(ErrorMessages::TICKETS_COUNT_DOES_NOT_MATCH_RESERVED_SEATS_COUNT, 400);
+            if ($reservedSeat === 0) throw new BadRequestException(ErrorMessages::NO_SEAT_SELECTED, 400); 
+            if ($reservedSeat !== $ticketsCount) throw new BadRequestException(ErrorMessages::TICKETS_COUNT_DOES_NOT_MATCH_RESERVED_SEATS_COUNT, 400);
             
             /** @var ProjectionEvent $projectionEvent  */
             $projectionEvent =  $reservation->getProjectionEvent();
