@@ -25,18 +25,20 @@ class ReservationsFixtures extends Fixture implements FixtureGroupInterface
             
             /** @var ProjectionEvent $projectionEvent  */
             $projectionEvent = $query->getResult()[0]; // Take first projectionEvent (no matter which one)
-            // $seat = $projectionEvent->getAvailableSeats()->first();
+            $seat = $projectionEvent->getAvailableSeats()->first();
             
             $reservation = (new Reservation())
             ->setUser($user)
-            ->setProjectionEvent($projectionEvent)
             ->setHasRate(false)
             ->setPaid(false)
-            // ->addSeat($seat)
+            ->addSeat($seat)
             ;
+
+            $projectionEvent->addReservation($reservation);
 
             if ($i >= 4) $reservation->setCreatedAt(new \DateTimeImmutable('yesterday')); // Make some unpaid reservations outdated for testing
             $manager->persist($reservation);
+            $manager->persist($projectionEvent);
             $manager->flush();
         }
     }
