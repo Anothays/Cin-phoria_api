@@ -35,7 +35,7 @@ class ProjectionEventCrudController extends AbstractCrudController
             ChoiceField::new('language', 'Version'),
             AssociationField::new('format'),
             NumberField::new('soldSeatsCount', 'Places vendues')->hideOnForm(),
-            NumberField::new('availableSeatsCount', 'Places restantes')->hideOnForm(),
+            NumberField::new('availableSeatsCount', 'Places disponibles')->hideOnForm(),
         ];
     }
 
