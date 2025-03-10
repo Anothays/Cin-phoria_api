@@ -33,12 +33,6 @@ use Symfony\Component\Serializer\Attribute\MaxDepth;
             security: 'is_granted("ROLE_USER")',
             provider: ReservationProvider::class
         ),
-        // new Get(
-        //     name: 'app_check_payment_status',
-        //     security: 'is_granted("ROLE_USER")',
-        //     controller: CheckoutController::class,
-        //     uriTemplate: '/reservations/check-payment-status/{id}',
-        // ),
         new Post(
             security: 'is_granted("ROLE_USER")',
             processor: ReservationProcessor::class,
@@ -46,8 +40,6 @@ use Symfony\Component\Serializer\Attribute\MaxDepth;
         new Post(
             name: 'checkout',
             security: 'is_granted("ROLE_USER")',
-            // input: CheckoutRequestDto::class ,
-            // processor: CheckoutProcessor::class ,
             controller: CheckoutController::class,
             uriTemplate: '/reservations/checkout/{id}',
             openapiContext: [
@@ -150,6 +142,11 @@ class Reservation
     #[ORM\Column]
     #[Groups(['reservation', 'reservation:write'])]
     private ?int $id = null;
+    
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['reservation', 'reservation:write'])]
+    private ?ProjectionEvent $projectionEvent = null;
 
     #[ORM\Column( options: ['default' => false])]
     #[Groups(['reservation'])]
@@ -172,11 +169,6 @@ class Reservation
     #[MaxDepth(1)]
     #[Groups(['reservation'])]
     private Collection $tickets;
-
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['reservation', 'reservation:write'])]
-    private ?ProjectionEvent $projectionEvent = null;
 
     /**
      * @var Collection<int, ProjectionRoomSeat>

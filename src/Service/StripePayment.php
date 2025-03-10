@@ -29,20 +29,21 @@ class StripePayment
   {
     $conn = $this->em->getConnection();
     try {
-      // Retrieve Stripe checkout session
+
+      // RETRIEVE STRIPE CHECKOUT SESSION
       $checkout_session = $this->stripeClient->checkout->sessions->retrieve($session_id);
       if ($checkout_session->payment_status === 'unpaid') throw new \Exception('Erreur de paiement');
       
-      // Get all items from Stripe checkout session in order to create new tickets
+      // GET ALL ITEMS FROM STRIPE CHECKOUT SESSION IN ORDER TO CREATE NEW TICKETS
       $items = $checkout_session->allLineItems($session_id);
       
-      // Get reservationId
+      // GET RESERVATIONID
       $reservationId = $checkout_session->metadata->reservation;
       
       /** 
-       *  Create array like this 
-       *  ["Moins de 14 ans","Etudiant scolaire","Etudiant scolaire","Tarif Normal","Tarif Normal","Tarif Normal"]
-       *  as parameter for SQL script ==>  /sql/transaction.sql
+       *  CREATE ARRAY : 
+       *  ["Moins de 14 ans", "Etudiant scolaire", "Tarif Normal"]
+       *  AS PARAMETER FOR SQL SCRIPT /sql/transaction.sql
       */
       $categories = [];
       foreach ($items->data as $item) {
@@ -50,17 +51,14 @@ class StripePayment
           $categories[] = mb_convert_encoding($item->description, 'UTF-8', 'auto');
         }
       }
-      $ticketsJson = json_encode($categories, JSON_UNESCAPED_UNICODE);
       
-      // Execute SQL transaction
+      // EXECUTE SQL TRANSACTION ==> PERSIST TICKETS INTO SQL DATABASE
       $conn->executeStatement(
         file_get_contents(__DIR__ . '/../../' .'/sql/transaction.sql'),
-        [
-          'reservation_id' => $reservationId,
-          'tickets' => $ticketsJson,
-        ]
+        [ 'reservation_id' => $reservationId, 'tickets' => json_encode($categories, JSON_UNESCAPED_UNICODE)]
       );
 
+      // HANDLE TICKET PERSISTENCE INTO MONGODB
       $reservationRepository = $this->em->getRepository(Reservation::class);
       /** @var Reservation $reservation */
       $reservation = $reservationRepository->find($reservationId);
@@ -69,8 +67,6 @@ class StripePayment
       $projectionEventFormat->getExtraCharge();
       $movieTitle = $reservation->getProjectionEvent()->getMovie()->getTitle();
       $tickets = $reservation->getTickets();
-
-      
       foreach ($tickets as $ticket) { 
         /** @var Ticket $ticket */
         $ticketDoc = new TicketDoc(
@@ -81,15 +77,16 @@ class StripePayment
         $this->dm->persist($ticketDoc);
         $this->dm->flush();
       }
-        
+      
       return true;
 
     } catch (\Throwable $th) {
-      // dd($th);
-        // Log de l'erreur et retour d'un échec
         error_log($th->getMessage());
         return false;
     }
   }
 
 }
+
+
+

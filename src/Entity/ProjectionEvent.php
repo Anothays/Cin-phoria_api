@@ -23,28 +23,15 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: ProjectionEventRepository::class)]
 #[ApiResource(
-    // normalizationContext: ['groups' => ['projectionEvent']],
-    // denormalizationContext: ['groups' => ['projectionEvent:write']],
     operations: [
         new GetCollection(),
         new Get(),
-        // new Get(
-        //     name: 'projection_events',
-        //     uriTemplate: '/projection_events/{id}/reserved_seats',
-        //     controller: CoucouController::class,
-        // ),
         new Post(security: "is_granted('ROLE_ADMIN')"),
         new Put(security: "is_granted('ROLE_ADMIN')"),
         new Delete(security: "is_granted('ROLE_ADMIN')"),
         new Patch(security: "is_granted('ROLE_ADMIN')"),
     ]
-
 )]
-// #[ApiFilter(DateFilter::class, properties: [
-//     'beginAt' => 'exact',
-// ])]
-// #[ApiFilter(SearchFilter::class, properties: ['movie.title' => 'exact'])]
-// #[ApiFilter(OrderFilter::class, properties: ['getMovieTheater.id'], arguments: ['orderParameterName' => 'order'])]
 class ProjectionEvent
 {
     #[ORM\Id]
@@ -52,6 +39,12 @@ class ProjectionEvent
     #[ORM\Column]
     #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write', 'projectionEvent'])]
     private ?int $id = null;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'projectionEvent', orphanRemoval: true)]
+    private Collection $reservations;
 
     #[ORM\Column(enumType: ProjectionEventLanguage::class, length: 20)]
     #[Groups(['movie', 'movie:get', 'reservation', 'reservation:write'])]
@@ -82,12 +75,7 @@ class ProjectionEvent
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
-
-    /**
-     * @var Collection<int, Reservation>
-     */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'projectionEvent', orphanRemoval: true)]
-    private Collection $reservations;
+    
 
     public function __construct()
     {
@@ -259,6 +247,7 @@ class ProjectionEvent
     /**
      * @return Collection<int, ProjectionRoomSeat>
      */
+    // #[Groups(['reservation', 'reservation:write'])]
     public function getAvailableSeats(): Collection
     {
         $allRoomSeats = $this->projectionRoom->getProjectionRoomSeats();
@@ -315,3 +304,5 @@ class ProjectionEvent
         });
     }
 }
+
+
