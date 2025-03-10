@@ -61,6 +61,7 @@ class ProjectionEventCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            ->add('movie')
             ->add(MovieTheaterFilter::new('Cinema'))
             ->add('projectionRoom')
             ->add(VersionFilter::new('language', 'Langue'))
