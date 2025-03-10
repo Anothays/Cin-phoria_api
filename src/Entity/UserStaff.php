@@ -13,13 +13,16 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: UserStaffRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['userStaff']],
+    denormalizationContext: ['groups' => ['userStaff:write']],
+)]
 class UserStaff extends UserAbstract
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user', 'user:write', 'movie'])]
+    #[Groups(['userStaff', 'userStaff:write', 'movie'])]
     private ?int $id = null;
 
     /**

@@ -9,13 +9,10 @@ use Doctrine\ORM\Mapping\MappedSuperclass;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[MappedSuperclass()]
-#[ApiResource(
-    normalizationContext: ['groups' => ['user']],
-    denormalizationContext: ['groups' => ['user:write']],
-    operations: []
-)]
+#[ApiResource(operations: [])]
 abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
@@ -35,6 +32,8 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
      * @var string The hashed password
      */
     #[ORM\Column(length: 60)]
+    #[Groups(['user:write'])]
+    // #[Ignore]
     private ?string $password = null;
     
     /**

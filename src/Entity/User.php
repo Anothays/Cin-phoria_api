@@ -15,11 +15,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource(
+    normalizationContext: ['groups' => ['user']],
+    denormalizationContext: ['groups' => ['user:write']],
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_USER")', 
@@ -54,6 +57,7 @@ class User extends UserAbstract
     private Collection $reservations;
 
     #[ORM\Column]
+    #[Ignore]
     private bool $isVerified = false;
 
     /**
