@@ -1,6 +1,6 @@
 api_platform:
   show_webby: false
-  title: Hello API Platform
+  title: Cinephoria API
   version: 1.0.0
   formats:
     jsonld: ["application/ld+json"]
