@@ -46,6 +46,9 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist
         env:
+          JWT_SECRET_KEY: "%kernel.project_dir%/config/jwt/private.pem"
+          JWT_PUBLIC_KEY: "%kernel.project_dir%/config/jwt/public.pem"
+          JWT_PASSPHRASE: "changeMe"
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/cinephoriatest_db
           MONGODB_URL: mongodb://root:root@127.0.0.1:27017
           BASE_URL_FRONT: http://localhost:3000
@@ -66,12 +69,13 @@ jobs:
           BASE_URL_FRONT: "http://localhost:3000"
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
-          JWT_SECRET_KEY: "jwt_secret"
-          JWT_PUBLIC_KEY: "jwt_public_key"
-          JWT_PASSPHRASE: "jwt_passphrase"
+          JWT_SECRET_KEY: "%kernel.project_dir%/config/jwt/private.pem"
+          JWT_PUBLIC_KEY: "%kernel.project_dir%/config/jwt/public.pem"
+          JWT_PASSPHRASE: "changeMe"
           KERNEL_CLASS: 'App\Kernel'
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/cinephoriatest_db
           MONGODB_URL: mongodb://root:root@127.0.0.1:27017
+          MAILER_DSN: "smtp://changeMe@changeMe:changeMe@smtp.mail.ovh.net:465"
 
   docker:
     # if: ${{ !vars.SKIP_JOB }} # Just for testing
