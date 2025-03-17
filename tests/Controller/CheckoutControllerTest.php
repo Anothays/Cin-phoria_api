@@ -58,40 +58,40 @@ class CheckoutControllerTest extends ApiTestCase
         return $response['token'];
     }
 
-    // public function testCheckoutController()
-    // {
-    //     $this->databaseTool->loadFixtures([AppFixtures::class]);
-    //     $accessToken = $this->loginUserCustomer();   
-    //     $reservations = $this->em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false")->getResult();
-    //     $ticketCategories = $this->em->createQuery("select c from App\Entity\TicketCategory c")->getResult();
-    //     $ticketCategory = $ticketCategories[0];
-    //     $timeout = (new \DateTime())->modify("-5 minutes");
-    //     foreach ($reservations as $reservation) {
-    //         $reservationId = $reservation->getId();
-    //         $ticketCount = $reservation->getSeats()->count();
-    //         $payload = [
-    //             'reservationId' => $reservationId, 
-    //             'tickets' => [[ 
-    //                 "id" => $ticketCategory->getId(), 
-    //                 "category" => $ticketCategory->getCategoryName(), 
-    //                 'count' => $ticketCount
-    //             ]]
-    //         ];
-    //         $this->client->request('POST', "/api/reservations/checkout/{$reservationId}", [
-    //             'json' => $payload,
-    //             'headers' => [
-    //                 'Content-Type' => 'application/ld+json',
-    //                 'Authorization' => "Bearer {$accessToken}"
-    //                 ]
-    //             ]);
-    //         if ($reservation->getCreatedAt() > $timeout) {
-    //             $this->assertResponseIsSuccessful();        
-    //             $content = json_decode($this->client->getResponse()->getContent(), true);
-    //             $this->assertIsString($content['url']);
-    //         } else {
-    //             $statusCode = $this->getClient()->getResponse()->getStatusCode();
-    //             $this->assertTrue($statusCode >= 400 && $statusCode < 500);
-    //         }
-    //     }
-    // }
+    public function testCheckoutController()
+    {
+        $this->databaseTool->loadFixtures([AppFixtures::class]);
+        $accessToken = $this->loginUserCustomer();   
+        $reservations = $this->em->createQuery("select r from App\Entity\Reservation r where r.isPaid = false")->getResult();
+        $ticketCategories = $this->em->createQuery("select c from App\Entity\TicketCategory c")->getResult();
+        $ticketCategory = $ticketCategories[0];
+        $timeout = (new \DateTime())->modify("-5 minutes");
+        foreach ($reservations as $reservation) {
+            $reservationId = $reservation->getId();
+            $ticketCount = $reservation->getSeats()->count();
+            $payload = [
+                'reservationId' => $reservationId, 
+                'tickets' => [[ 
+                    "id" => $ticketCategory->getId(), 
+                    "category" => $ticketCategory->getCategoryName(), 
+                    'count' => $ticketCount
+                ]]
+            ];
+            $this->client->request('POST', "/api/reservations/checkout/{$reservationId}", [
+                'json' => $payload,
+                'headers' => [
+                    'Content-Type' => 'application/ld+json',
+                    'Authorization' => "Bearer {$accessToken}"
+                    ]
+                ]);
+            if ($reservation->getCreatedAt() > $timeout) {
+                $this->assertResponseIsSuccessful();        
+                $content = json_decode($this->client->getResponse()->getContent(), true);
+                $this->assertIsString($content['url']);
+            } else {
+                $statusCode = $this->getClient()->getResponse()->getStatusCode();
+                $this->assertTrue($statusCode >= 400 && $statusCode < 500);
+            }
+        }
+    }
 }
