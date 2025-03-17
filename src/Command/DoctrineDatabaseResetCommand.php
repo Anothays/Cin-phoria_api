@@ -21,7 +21,7 @@ class DoctrineDatabaseResetCommand extends Command
         parent::__construct();
     }
     
-    protected function configure()
+    protected function configure(): void
     {
         $this
         ->setDescription('Reset the database by executing the reset_db.sh script.')
