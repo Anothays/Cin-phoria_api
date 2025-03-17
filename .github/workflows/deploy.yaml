@@ -12,8 +12,70 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    name: Run PHPUnit tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.2
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: cinephoriatest_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=5s --health-timeout=5s --health-retries=10
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: root
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: pdo, pdo_mysql, mongodb
+          tools: composer, phpunit
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/cinephoriatest_db
+          MONGODB_URL: mongodb://root:root@127.0.0.1:27017
+          BASE_URL_FRONT: http://localhost:3000
+
+      - name: setup databases
+        run: php bin/console d:d:r -df
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/cinephoriatest_db
+          MONGODB_URL: mongodb://root:root@127.0.0.1:27017
+          BASE_URL_FRONT: http://localhost:3000
+          APP_SECRET: "app_secret"
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/phpunit
+        env:
+          APP_ENV: test
+          APP_SECRET: "app_secret"
+          BASE_URL_FRONT: "http://localhost:3000"
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+          JWT_SECRET_KEY: "jwt_secret"
+          JWT_PUBLIC_KEY: "jwt_public_key"
+          JWT_PASSPHRASE: "jwt_passphrase"
+          KERNEL_CLASS: 'App\Kernel'
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/cinephoriatest_db
+          MONGODB_URL: mongodb://root:root@127.0.0.1:27017
+
   docker:
     # if: ${{ !vars.SKIP_JOB }} # Just for testing
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
