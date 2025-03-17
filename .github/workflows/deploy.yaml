@@ -62,7 +62,7 @@ jobs:
           APP_SECRET: "app_secret"
 
       - name: Run PHPUnit tests
-        run: vendor/bin/phpunit
+        run: php bin/phpunit
         env:
           APP_ENV: test
           APP_SECRET: "app_secret"
