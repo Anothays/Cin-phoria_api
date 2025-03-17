@@ -35,7 +35,7 @@ class CheckoutController extends AbstractController
         private DocumentManager $dm, 
         private ParameterBagInterface $parameterBag,
         private EmailSender $emailSender,
-        private PdfMaker $pdfMaker
+        private PdfMaker $pdfMaker,
     ) {}
 
     public function __invoke(Reservation $reservation, #[CurrentUser] User $user, Request $request)
@@ -111,50 +111,59 @@ class CheckoutController extends AbstractController
             
     }
 
-    // #[Route('/checkout', name: 'app_checkout', methods: ['POST'])]
-    // public function index(Request $request)
-    // {
-        
-    // }
 
     #[Route('/payment-webhook', name: 'payment_webhook', methods: ['POST'])]
-    public function webhook(Request $request): Response
+    public function webhook(Request $request, StripePayment $stripePayment): Response
     {
-        
-        $webhookSecret = $this->params->get('stripe_secret_webhook');
-        $stripeApiKey = $this->params->get('stripe_secret_key');
-        $stripe = new StripePayment($stripeApiKey, $webhookSecret, $this->em, $this->dm);
-        
         try {
             $signature = $request->headers->get('stripe-signature');
-            if (!$signature) throw new UnauthorizedHttpException("Error Processing Request", 1);
+            if (!$signature) {
+                throw new UnauthorizedHttpException("Error Processing Request");
+            }
+
+            $webhookSecret = $this->params->get('stripe_secret_webhook');
             $body = $request->getContent();
             $event = Webhook::constructEvent($body, $signature, $webhookSecret);
+
             if ($event->type === 'checkout.session.completed') {
                 // Generate Tickets
                 $data = $event->data->object;
-                $result = $stripe->fulfillCheckout($data['id']);
-                if (!$result) return new Response('Erreur dans la prodécure de réalisation', 500);
+                $result = $stripePayment->fulfillCheckout($data['id']);
+                
+                if (!$result) {
+                    return new Response('Erreur dans la procédure de réalisation', Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+
                 // Send email with tickets
                 $reservationId = $data->metadata['reservation'];
                 $this->makeAndSendEmailFromReservation($reservationId);
+                
                 return new Response('Transaction et réalisation effectuée avec succès');
             }
-            return new Response('Not handle');
+
+            return new Response('Not handled');
+            
         } catch (\Throwable $th) {
-            return new Response('Erreur dans la prodécure de réalisation', 500);
+            return new Response('Erreur dans la procédure de réalisation', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function makeAndSendEmailFromReservation($reservationId)
+    private function makeAndSendEmailFromReservation(string $reservationId): void
     {
         /** @var Reservation $reservation */
         $reservation = $this->em->getRepository(Reservation::class)->find($reservationId);
         $to = $reservation->getUser()->getEmail();
         $subject = "Votre achat";
         $template = "email/email_tickets.html.twig";
-        $context = [ 'resa' => $reservation ];
-        $this->emailSender->makeAndSendEmail($to, $subject, $template, $context,  $this->pdfMaker->makeTicketsPdfFile($reservation) ?? null,);
+        $context = ['resa' => $reservation];
+        
+        $this->emailSender->makeAndSendEmail(
+            $to,
+            $subject,
+            $template,
+            $context,
+            $this->pdfMaker->makeTicketsPdfFile($reservation) ?? null
+        );
     }
 
 }
