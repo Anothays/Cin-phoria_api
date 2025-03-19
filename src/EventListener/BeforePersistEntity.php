@@ -56,13 +56,11 @@ class BeforePersistEntity
         return;
       } elseif (($ticket = $args->getObject()) instanceof Ticket) { // GENERATE TICKET INTO NOSQL DATABASE
         
-        // Don't generate NoSQL ticket in test environment
-        // if ($_ENV['APP_ENV'] === 'test') return;
         /** @var Ticket $ticket */
         $ticketDoc = new TicketDoc(
           $ticket->getProjectionEvent()->getMovie()->getTitle(), 
           $ticket->getCategory()->getCategoryName(), 
-          $ticket->getCategory()->getPrice()
+          $ticket->getCategory()->getPrice() + $ticket->getProjectionEvent()->getFormat()->getExtraCharge()
         );
         $this->dm->persist($ticketDoc);
         $this->dm->flush();

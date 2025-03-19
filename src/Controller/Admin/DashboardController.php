@@ -98,6 +98,8 @@ class DashboardController extends AbstractDashboardController
         ->getQuery()
         ->execute();
         $ticketCountByMovie = [];
+        $totalTickets = 0;
+        $totalAmount = 0;
         foreach ($tickets as $ticket) {
             /** @var TicketDoc $ticket */ 
             $movieTitle = $ticket->movieTitle;
@@ -111,9 +113,13 @@ class DashboardController extends AbstractDashboardController
             }
             $ticketCountByMovie[$movieTitle]['count']++;
             $ticketCountByMovie[$movieTitle]['amount'] += $ticket->price;
+            $totalAmount += $ticket->price;
+            $totalTickets++;
         }
         return $this->render('statistic/reservations.html.twig', [
             'ticketCountByMovie' => $ticketCountByMovie,
+            'totalAmount' => $totalAmount,
+            'totalTickets' => $totalTickets
         ]);
     }
 }

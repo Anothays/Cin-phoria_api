@@ -25,6 +25,13 @@
                         </tr>
                     {% endfor %}
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td style="font-weight: bold;">Total</td>
+                        <td style="font-weight: bold;">{{ totalTickets }}</td>
+                        <td style="font-weight: bold;">{{ (totalAmount / 100 )| number_format(2, '.', ',') }} €</td>
+                    </tr>
+                </tfoot>
             </table>
         {% endif %}
     </div>
