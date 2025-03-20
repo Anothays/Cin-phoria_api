@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Patch;
 use App\Repository\UserRepository;
+use App\State\DeleteAccountProcessor;
+use App\State\DeleteAccountProvider;
 use App\State\UserStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,6 +41,14 @@ use Symfony\Component\Serializer\Attribute\Ignore;
         ),
         new Patch(
             security: 'is_granted("ROLE_USER")'
+        ),
+        new Delete(
+            security: 'is_granted("ROLE_USER")',
+            provider: DeleteAccountProvider::class,
+            processor: DeleteAccountProcessor::class,
+            uriTemplate: '/users/delete-account/{id}',
+            name: 'delete_account',
+            description: 'Supprime le compte de l\'utilisateur connecté',
         )
     ],
 )]

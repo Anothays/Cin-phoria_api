@@ -13,13 +13,13 @@ use App\Service\PdfMaker;
 use App\Service\StripePayment;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Stripe\Webhook;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpClient\Exception\TimeoutException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -116,10 +116,10 @@ class CheckoutController extends AbstractController
     public function webhook(Request $request, StripePayment $stripePayment): Response
     {
         try {
+            
             $signature = $request->headers->get('stripe-signature');
-            if (!$signature) {
-                throw new UnauthorizedHttpException("Error Processing Request");
-            }
+
+            if (!$signature) throw new UnauthorizedHttpException("Error Processing Request");
 
             $webhookSecret = $this->params->get('stripe_secret_webhook');
             $body = $request->getContent();
@@ -141,7 +141,7 @@ class CheckoutController extends AbstractController
                 return new Response('Transaction et réalisation effectuée avec succès');
             }
 
-            return new Response('Not handled');
+            throw new Exception("Évènement non géré");
             
         } catch (\Throwable $th) {
             return new Response('Erreur dans la procédure de réalisation', Response::HTTP_INTERNAL_SERVER_ERROR);
