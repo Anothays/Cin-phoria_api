@@ -10,6 +10,8 @@ use App\Entity\ProjectionFormat;
 use App\Entity\Reservation;
 use App\Document\Ticket as TicketDoc;
 use App\Entity\Incident;
+use App\Entity\ProjectionRoom;
+use App\Entity\ProjectionRoomSeat;
 use App\Entity\Ticket;
 use App\Entity\TicketCategory;
 use App\Entity\User;
@@ -71,6 +73,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Réservations', 'fa fa-ticket', Reservation::class),
             MenuItem::linkToCrud('Catégories de projection', 'fa fa-bars', ProjectionFormat::class),
             MenuItem::linkToCrud('Cinémas', 'fa fa-location-dot', MovieTheater::class),
+            MenuItem::linkToCrud('Salles', 'fa fa-location-dot', ProjectionRoom::class),
+            MenuItem::linkToCrud('Sièges', 'fa fa-chair', ProjectionRoomSeat::class),
             MenuItem::linkToCrud('Clients', 'fa fa-users', User::class),
             MenuItem::linkToCrud('Employés', 'fa fa-users', UserStaff::class),
             MenuItem::linkToCrud('Tarifs', 'fa fa-money-bill', TicketCategory::class),

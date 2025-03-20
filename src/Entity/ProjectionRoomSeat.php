@@ -56,6 +56,11 @@ class ProjectionRoomSeat
         $this->reservations = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->seatRow . $this->seatNumber;
+    }
+
     #[Groups(['reservation', 'reservation:write', 'projectionRoom'])]
     public function getRowAndNumberSeat(): string
     {
