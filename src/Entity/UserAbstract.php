@@ -44,6 +44,7 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
     private array $roles = [];
 
     #[ORM\Column]
+    #[Groups(['user'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

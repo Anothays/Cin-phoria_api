@@ -9,10 +9,12 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Patch;
+use App\Dto\UpdateUserDto;
 use App\Repository\UserRepository;
 use App\State\DeleteAccountProcessor;
 use App\State\DeleteAccountProvider;
 use App\State\UserStateProcessor;
+use App\State\UpdateUserStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -40,7 +42,14 @@ use Symfony\Component\Serializer\Attribute\Ignore;
             security: 'is_granted("ROLE_USER")',
         ),
         new Patch(
-            security: 'is_granted("ROLE_USER")'
+            security: 'is_granted("ROLE_USER")',
+            processor: UpdateUserStateProcessor::class,
+            denormalizationContext: ['groups' => ['user:update']],
+            validationContext: ['groups' => ['user:update']],
+            openapiContext: [
+                'summary' => 'Mettre à jour les informations personnelles',
+                'description' => 'Permet à l\'utilisateur de modifier son prénom et son nom'
+            ]
         ),
         new Delete(
             security: 'is_granted("ROLE_USER")',
