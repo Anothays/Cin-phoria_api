@@ -22,7 +22,11 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
-    
+
+RUN echo "APP_ENV=prod" > .env
+
+RUN echo "memory_limit=256M" > /usr/local/etc/php/conf.d/memory-limit.ini    
+
 RUN sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf

@@ -2,7 +2,6 @@ vendor
 node_modules
 .git
 .*
-!.env
 config/jwt/*
 var/cache/*
 var/cache/log/*
