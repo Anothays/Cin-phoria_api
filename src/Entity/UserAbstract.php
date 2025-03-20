@@ -33,7 +33,6 @@ abstract class UserAbstract implements UserInterface, PasswordAuthenticatedUserI
      */
     #[ORM\Column(length: 60)]
     #[Groups(['user:write'])]
-    // #[Ignore]
     private ?string $password = null;
     
     /**

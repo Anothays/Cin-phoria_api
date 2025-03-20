@@ -43,17 +43,11 @@ use Symfony\Component\Serializer\Attribute\Ignore;
         ),
         new Patch(
             security: 'is_granted("ROLE_USER")',
+            input: UpdateUserDto::class,
             processor: UpdateUserStateProcessor::class,
-            denormalizationContext: ['groups' => ['user:update']],
-            validationContext: ['groups' => ['user:update']],
-            openapiContext: [
-                'summary' => 'Mettre à jour les informations personnelles',
-                'description' => 'Permet à l\'utilisateur de modifier son prénom et son nom'
-            ]
         ),
         new Delete(
             security: 'is_granted("ROLE_USER")',
-            provider: DeleteAccountProvider::class,
             processor: DeleteAccountProcessor::class,
             uriTemplate: '/users/delete-account/{id}',
             name: 'delete_account',
@@ -75,7 +69,7 @@ class User extends UserAbstract
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
     #[Groups(['user', 'user:write', 'movie'])]
     private Collection $reservations;
-
+    
     #[ORM\Column]
     #[Ignore]
     private bool $isVerified = false;

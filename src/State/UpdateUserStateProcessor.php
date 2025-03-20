@@ -19,31 +19,21 @@ class UpdateUserStateProcessor implements ProcessorInterface
     ) {}
 
     /**
-     * @param User $data
+     * @param UpdateUserDto $data
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
     {
+        /** @var User $currentUser */
+        $currentUser = $this->security->getUser();
 
         if ($operation instanceof Patch) {
 
-            /** @var User $currentUser */
-            $currentUser = $this->security->getUser();
-            
-            // Vérifier que l'utilisateur modifie son propre profil
-            if ($currentUser->getId() !== $data->getId()) {
-                throw new AccessDeniedHttpException('Vous ne pouvez pas modifier les informations d\'un autre utilisateur.');
-            }
+            $currentUser->setFirstname($data->firstname);
+            $currentUser->setLastname($data->lastname);
 
-            // Seuls le prénom et le nom peuvent être modifiés
-            $allowedFields = ['firstname', 'lastname'];
-            $requestData = json_decode($context['request']->getContent(), true);
-
-            $data->setFirstname($requestData['firstname']);
-            $data->setLastname($requestData['lastname']);
-
-            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+            return $this->persistProcessor->process($currentUser, $operation, $uriVariables, $context);
         }
 
-        return $data;
+        return $currentUser;
     }
 } 
